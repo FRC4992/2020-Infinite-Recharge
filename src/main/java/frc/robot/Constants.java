@@ -16,4 +16,36 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    // Pneumatics
+    public static final int
+    SHIFTER_FORWARD = 0,
+    SHIFTER_REVERSE = 1;
+
+    // Motors
+    public static final int
+    TOP_LEFT_DRIVE = 1,
+    BOTTOM_LEFT_DRIVE = 2,
+    TOP_RIGHT_DRIVE = 3,
+    BOTTOM_RIGHT_DRIVE = 4,
+    INTAKE_MOTOR = 5,
+    INDEX_MOTOR = 6,
+    LEFT_SHOOT_MOTOR = 7,
+    RIGHT_SHOOT_MOTOR = 8,
+    TELESCOPE_MOTOR = 9,
+    LEFT_WINCH = 10,
+    RIGHT_WINCH = 11,
+    PANEL_MOTOR = 12;
+
+    // LEDs
+    public static final int
+    LED_PWM = 0,
+    LED_LENGTH = 60,
+    LED_MIDDLE_START = 19,
+    LED_MIDDLE_END = 38;
+
+    // Joystick
+    public static final int
+    STICK = 0;
+
+    // Sensors
 }
