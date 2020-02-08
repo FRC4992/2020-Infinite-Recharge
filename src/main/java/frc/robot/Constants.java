@@ -48,4 +48,7 @@ public final class Constants {
     STICK = 0;
 
     // Sensors
+    public static final int
+    LIMIT_SWITCH_TOP = 1,
+    LIMIT_SWITCH_BOTTOM = 2;
 }

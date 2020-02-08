@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.subsystems.Telescope;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -18,7 +19,7 @@ import edu.wpi.first.wpilibj.XboxController;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-
+  public static Telescope telescope = new Telescope();
 
 
   /**
