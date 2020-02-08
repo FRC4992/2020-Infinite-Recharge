@@ -16,10 +16,15 @@ public class Winch extends SubsystemBase {
   /**
    * Creates a new Winch.
    */
-  WPI_TalonSRX leftMotor, rightMotor;
+  private WPI_TalonSRX leftMotor, rightMotor;
   public Winch() {
     leftMotor = new WPI_TalonSRX(Constants.LEFT_WINCH);
     rightMotor = new WPI_TalonSRX(Constants.RIGHT_WINCH);
+  }
+
+  public void setSpeed(double speed) {
+    leftMotor.set(speed);
+    rightMotor.set(speed);
   }
 
   @Override
