@@ -10,6 +10,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,6 +24,7 @@ public class Drive extends SubsystemBase {
   private CANSparkMax frontLeft, frontRight, backLeft, backRight;
   private SpeedControllerGroup left, right;
   private DifferentialDrive differentialDrive;
+  public DoubleSolenoid shifter;
 
   private CANEncoder leftTicks, rightTicks;
 
@@ -35,6 +38,7 @@ public class Drive extends SubsystemBase {
     differentialDrive = new DifferentialDrive(left, right);
     leftTicks = frontLeft.getEncoder();
     rightTicks = frontRight.getEncoder();
+    shifter = new DoubleSolenoid(Constants.SHIFTER_FORWARD, Constants.SHIFTER_REVERSE);
   }
 
   public double getLeftTicks(){

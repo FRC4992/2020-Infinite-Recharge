@@ -7,8 +7,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.subsystems.Drive;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -18,8 +22,8 @@ import edu.wpi.first.wpilibj.XboxController;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-
-
+  public static Drive drive = new Drive();
+  public static Joystick driveStick = new Joystick(Constants.STICK);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -36,5 +40,9 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    JoystickButton shiftDown = new JoystickButton(driveStick, 5);
+    shiftDown.whenPressed(()->{drive.shifter.set(DoubleSolenoid.Value.kForward);});
+    JoystickButton shiftUp = new JoystickButton(driveStick, 6);
+    shiftUp.whenPressed(()->{drive.shifter.set(DoubleSolenoid.Value.kReverse);});
   }
 }
