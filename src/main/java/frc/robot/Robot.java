@@ -7,14 +7,22 @@
 
 package frc.robot;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the TimedRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the build.gradle file in the
  * project.
  */
 public class Robot extends TimedRobot {
@@ -22,28 +30,46 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
+   * This function is run when the robot is first started up and should be used
+   * for any initialization code.
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+    // Instantiate our RobotContainer. This will perform all our button bindings,
+    // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    try {
+      RobotContainer.file = new File("/home/lvuser/prefs.txt");
+      if (!RobotContainer.file.exists()) {
+        RobotContainer.file.createNewFile();
+      }
+      RobotContainer.fw = new FileWriter(RobotContainer.file);
+      RobotContainer.fr = new FileReader(RobotContainer.file);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    RobotContainer.bw = new BufferedWriter(RobotContainer.fw);
+    RobotContainer.br = new BufferedReader(RobotContainer.fr);
   }
 
   /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
+   * This function is called every robot packet, no matter the mode. Use this for
+   * items like diagnostics that you want ran during disabled, autonomous,
+   * teleoperated and test.
    *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
+   * <p>
+   * This runs after the mode specific periodic functions, but before LiveWindow
+   * and SmartDashboard integrated updating.
    */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
+    // Runs the Scheduler. This is responsible for polling buttons, adding
+    // newly-scheduled
+    // commands, running already-scheduled commands, removing finished or
+    // interrupted commands,
+    // and running subsystem periodic() methods. This must be called from the
+    // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
   }
@@ -60,11 +86,12 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
+   * This autonomous runs the autonomous command selected by your
+   * {@link RobotContainer} class.
    */
   @Override
   public void autonomousInit() {
-    
+
   }
 
   /**
@@ -76,7 +103,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-   
+    try {
+      RobotContainer.bw.write("-5.4,7.69");
+      RobotContainer.bw.close();
+      RobotContainer.fw.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -84,6 +117,16 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    try {
+      RobotContainer.br = new BufferedReader(RobotContainer.fr);
+      String val = RobotContainer.br.readLine();
+      if (val != null) {
+        SmartDashboard.putNumber("X",Double.parseDouble(val.split(",")[0]));
+        SmartDashboard.putNumber("Y",Double.parseDouble(val.split(",")[1]));
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
