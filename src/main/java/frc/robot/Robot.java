@@ -7,15 +7,8 @@
 
 package frc.robot;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
@@ -39,18 +32,6 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    try {
-      RobotContainer.file = new File("/home/lvuser/prefs.txt");
-      if (!RobotContainer.file.exists()) {
-        RobotContainer.file.createNewFile();
-      }
-      RobotContainer.fw = new FileWriter(RobotContainer.file);
-      RobotContainer.fr = new FileReader(RobotContainer.file);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    RobotContainer.bw = new BufferedWriter(RobotContainer.fw);
-    RobotContainer.br = new BufferedReader(RobotContainer.fr);
   }
 
   /**
@@ -79,6 +60,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    RobotContainer.shooter.WriteToFile();
   }
 
   @Override
@@ -103,13 +85,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    try {
-      RobotContainer.bw.write("-5.4,7.69");
-      RobotContainer.bw.close();
-      RobotContainer.fw.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    RobotContainer.shooter.ReadFromFile();
   }
 
   /**
@@ -117,16 +93,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    try {
-      RobotContainer.br = new BufferedReader(RobotContainer.fr);
-      String val = RobotContainer.br.readLine();
-      if (val != null) {
-        SmartDashboard.putNumber("X",Double.parseDouble(val.split(",")[0]));
-        SmartDashboard.putNumber("Y",Double.parseDouble(val.split(",")[1]));
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
   }
 
   @Override

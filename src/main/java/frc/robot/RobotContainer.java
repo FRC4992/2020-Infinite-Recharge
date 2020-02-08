@@ -7,14 +7,9 @@
 
 package frc.robot;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.subsystems.Shooter;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -25,11 +20,7 @@ import edu.wpi.first.wpilibj.XboxController;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  static File file;
-  static BufferedReader br;
-  static BufferedWriter bw;
-  static FileReader fr;
-	static FileWriter fw;
+  public static Shooter shooter = new Shooter();
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
