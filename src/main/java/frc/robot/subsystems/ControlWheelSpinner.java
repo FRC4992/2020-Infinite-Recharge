@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,6 +24,7 @@ public class ControlWheelSpinner extends SubsystemBase {
    * Creates a new ControlWheelSpinner.
    */
   private WPI_TalonSRX motor;
+  private DoubleSolenoid piston;
   ColorSensorV3 colorSens = new ColorSensorV3(I2C.Port.kOnboard);
   ColorMatch matcher = new ColorMatch();
   public WHEEL_COLORS currentColor = WHEEL_COLORS.NOT_FOUND;
@@ -53,14 +55,28 @@ public class ControlWheelSpinner extends SubsystemBase {
 
   public ControlWheelSpinner() {
     motor = new WPI_TalonSRX(Constants.PANEL_MOTOR);
+    piston = new DoubleSolenoid(Constants.SPINNER_FORWARD, Constants.SPINNER_REVERSE);
     for (WHEEL_COLORS c : WHEEL_COLORS.values()) {
       matcher.addColorMatch(c.color);
     }
+    retract();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  public void setSpeed(double speed) {
+    motor.set(speed);
+  }
+
+  public void extend(){
+    piston.set(DoubleSolenoid.Value.kReverse);
+  }
+
+  public void retract(){
+    piston.set(DoubleSolenoid.Value.kForward);
   }
 
   public void updateColor() {

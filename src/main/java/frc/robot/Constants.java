@@ -19,7 +19,9 @@ public final class Constants {
     // Pneumatics
     public static final int
     SHIFTER_FORWARD = 0,
-    SHIFTER_REVERSE = 1;
+    SHIFTER_REVERSE = 1,
+    SPINNER_FORWARD = 2,
+    SPINNER_REVERSE = 3;
 
     // Motors
     public static final int
@@ -45,7 +47,8 @@ public final class Constants {
 
     // Joystick
     public static final int
-    STICK = 0;
+    STICK = 0,
+    PANEL = 1;
 
     // Sensors
 }
