@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.ArcadeDrive;
 import frc.robot.subsystems.Drive;
 
 /**
@@ -26,6 +27,7 @@ import frc.robot.subsystems.Drive;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static Drive drive = new Drive();
+  public ArcadeDrive arcadeDriveCommand = new ArcadeDrive();
   public static Joystick driveStick = new Joystick(Constants.STICK);
   private static NetworkTableInstance tableInstance;
   private static NetworkTable limelight;
@@ -38,6 +40,7 @@ public class RobotContainer {
     configureButtonBindings();
     tableInstance = NetworkTableInstance.getDefault();
     limelight = tableInstance.getTable("limelight");
+    
   }
 
   public static boolean foundTarget() {

@@ -92,7 +92,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-   
+   m_robotContainer.arcadeDriveCommand.schedule(true);
   }
 
   /**
@@ -100,6 +100,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    CommandScheduler.getInstance().run();
   }
 
   @Override

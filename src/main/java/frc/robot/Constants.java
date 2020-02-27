@@ -23,10 +23,10 @@ public final class Constants {
 
     // Motors
     public static final int
-    TOP_LEFT_DRIVE = 1,
-    BOTTOM_LEFT_DRIVE = 2,
+    TOP_LEFT_DRIVE = 4,
+    BOTTOM_LEFT_DRIVE = 1,
     TOP_RIGHT_DRIVE = 3,
-    BOTTOM_RIGHT_DRIVE = 4,
+    BOTTOM_RIGHT_DRIVE = 2,
     INTAKE_MOTOR = 5,
     INDEX_MOTOR = 6,
     LEFT_SHOOT_MOTOR = 7,

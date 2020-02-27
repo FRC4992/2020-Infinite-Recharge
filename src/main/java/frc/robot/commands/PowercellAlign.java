@@ -7,10 +7,8 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Robot;
+import edu.wpi.first.wpilibj2.command.CommandBase;  
 import frc.robot.RobotContainer;
-import frc.robot.LEDRunner.AnimationMode;
 import frc.robot.subsystems.Drive.SENSOR_TYPES;
 
 public class PowercellAlign extends CommandBase {
