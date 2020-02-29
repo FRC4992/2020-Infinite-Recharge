@@ -48,4 +48,6 @@ public final class Constants {
     STICK = 0;
 
     // Sensors
+    public static final int
+    TOF = 15;
 }
