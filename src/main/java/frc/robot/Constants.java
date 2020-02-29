@@ -27,10 +27,10 @@ public final class Constants {
     BOTTOM_LEFT_DRIVE = 2,
     TOP_RIGHT_DRIVE = 3,
     BOTTOM_RIGHT_DRIVE = 4,
-    INTAKE_MOTOR = 5,
-    INDEX_MOTOR = 6,
-    LEFT_SHOOT_MOTOR = 7,
-    RIGHT_SHOOT_MOTOR = 8,
+    INTAKE_MOTOR = 0,
+    INDEX_MOTOR = 7,
+    LEFT_SHOOT_MOTOR = 5,
+    RIGHT_SHOOT_MOTOR = 6,
     TELESCOPE_MOTOR = 9,
     LEFT_WINCH = 10,
     RIGHT_WINCH = 11,
@@ -51,5 +51,5 @@ public final class Constants {
     public static final int
     TOF = 15;
     public static double INTAKE_SENSOR_RANGE_MM = 50;
-    public static int INDEXER_TICKS_PER_SEGMENT = 600;
+    public static int INDEXER_TICKS_PER_SEGMENT = 2240;
 }

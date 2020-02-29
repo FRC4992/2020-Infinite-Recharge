@@ -44,7 +44,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     Joystick stick = new Joystick(0);
-    JoystickButton intake = new JoystickButton(stick, 3);
-    intake.whenHeld(new IntakeSequence());
+    JoystickButton intakeButton = new JoystickButton(stick, 3);
+    JoystickButton cycle = new JoystickButton(stick, 2);
+    // intake.whenHeld(new IntakeSequence());
+    intakeButton
+      .whenPressed(()->intake.intake())
+      .whenReleased(()->intake.stop());
+    cycle.whenPressed(()->indexer.cycleBalls());
   }
 }

@@ -25,11 +25,13 @@ public class Indexer extends PIDSubsystem {
   public TimeOfFlight tof;
   public static int ballCount = 0;
   public Indexer() {
-    super(new PIDController(0.001,0,0));
+    super(new PIDController(0.0001,0,0));
     indexerMotor = new WPI_TalonSRX(Constants.INDEX_MOTOR);
     tof = new TimeOfFlight(Constants.TOF);
-    getController().setTolerance(50);
+    getController().setTolerance(50,10);
     indexerMotor.setNeutralMode(NeutralMode.Brake);
+    enable();
+    indexerMotor.setSelectedSensorPosition(0);
   }
 
   @Override
@@ -38,6 +40,8 @@ public class Indexer extends PIDSubsystem {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Indexer Ticks", this.getMeasurement());
     SmartDashboard.putData(getController());
+    SmartDashboard.putNumber("Ball Count", ballCount);
+    SmartDashboard.putBoolean("Indexer Done", getController().atSetpoint());
   }
 
   @Override
@@ -55,6 +59,6 @@ public class Indexer extends PIDSubsystem {
   }
 
   public void cycleBalls(){
-    setSetpoint(this.getMeasurement()+Constants.INDEXER_TICKS_PER_SEGMENT);
+    setSetpoint(this.getMeasurement()-Constants.INDEXER_TICKS_PER_SEGMENT);
   }
 }
