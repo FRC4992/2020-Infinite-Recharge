@@ -7,8 +7,7 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -16,9 +15,9 @@ public class Intake extends SubsystemBase {
   /**
    * Creates a new Intake.
    */
-  public VictorSPX intakeMotor;
+  public VictorSP intakeMotor;
   public Intake() {
-    intakeMotor = new VictorSPX(Constants.INTAKE_MOTOR);
+    intakeMotor = new VictorSP(Constants.INTAKE_MOTOR);
   }
 
   @Override
