@@ -9,6 +9,7 @@ package frc.robot;
 
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
@@ -53,6 +54,8 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    SmartDashboard.putNumber("Left Speed", ((Constants.NANO_TIME_SCALE/1000)*RobotContainer.shooter.lSpeed)*(60/2));
+    SmartDashboard.putNumber("Right Speed", ((Constants.NANO_TIME_SCALE/1000)*RobotContainer.shooter.rSpeed)*);
   }
 
   /**
@@ -60,7 +63,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    RobotContainer.shooter.WriteToFile();
+    // RobotContainer.shooter.WriteToFile();
   }
 
   @Override
@@ -85,7 +88,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    RobotContainer.shooter.ReadFromFile();
+    // RobotContainer.shooter.ReadFromFile();
   }
 
   /**

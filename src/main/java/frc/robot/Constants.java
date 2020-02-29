@@ -29,12 +29,13 @@ public final class Constants {
     BOTTOM_RIGHT_DRIVE = 4,
     INTAKE_MOTOR = 5,
     INDEX_MOTOR = 6,
-    LEFT_SHOOT_MOTOR = 7,
-    RIGHT_SHOOT_MOTOR = 8,
-    TELESCOPE_MOTOR = 9,
-    LEFT_WINCH = 10,
+    LEFT_SHOOT_MOTOR = 9,
+    RIGHT_SHOOT_MOTOR = 10,
+    TELESCOPE_MOTOR = 7,
+    LEFT_WINCH = 8,
     RIGHT_WINCH = 11,
-    PANEL_MOTOR = 12;
+    PANEL_MOTOR = 12,
+    SHOOTER_TILT_MOTOR = 8;
 
     // LEDs
     public static final int
@@ -48,4 +49,9 @@ public final class Constants {
     STICK = 0;
 
     // Sensors
+    public static final int
+    LEFT_SHOOTER_PROXY = 6,
+    RIGHT_SHOOTER_PROXY = 7
+    ;
+    public static final int NANO_TIME_SCALE = 1*(int)(Math.pow(10, 9));
 }
