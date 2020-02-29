@@ -50,4 +50,6 @@ public final class Constants {
     // Sensors
     public static final int
     TOF = 15;
+    public static double INTAKE_SENSOR_RANGE_MM = 50;
+    public static int INDEXER_TICKS_PER_SEGMENT = 600;
 }
