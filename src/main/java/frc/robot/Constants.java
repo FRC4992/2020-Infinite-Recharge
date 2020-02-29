@@ -27,13 +27,13 @@ public final class Constants {
     BOTTOM_LEFT_DRIVE = 2,
     TOP_RIGHT_DRIVE = 3,
     BOTTOM_RIGHT_DRIVE = 4,
-    INTAKE_MOTOR = 5,
-    INDEX_MOTOR = 6,
+    INTAKE_MOTOR = 10,
+    INDEX_MOTOR = 11,
     LEFT_SHOOT_MOTOR = 7,
     RIGHT_SHOOT_MOTOR = 8,
     TELESCOPE_MOTOR = 9,
-    LEFT_WINCH = 10,
-    RIGHT_WINCH = 11,
+    LEFT_WINCH = 5,
+    RIGHT_WINCH = 6,
     PANEL_MOTOR = 12;
 
     // LEDs

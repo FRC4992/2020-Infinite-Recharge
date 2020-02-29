@@ -8,7 +8,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.WinchUp;
 import frc.robot.subsystems.Winch;
 
 /**
@@ -37,5 +40,8 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    Joystick stick = new Joystick(0);
+    JoystickButton winchTest = new JoystickButton(stick, 1);
+    winchTest.whenHeld(new WinchUp());//TODO proper binding
   }
 }
