@@ -32,44 +32,75 @@ public class Shooter extends PIDSubsystem {
   static BufferedWriter bw;
   static FileReader fr;
   static FileWriter fw;
-  
+
   public WPI_TalonSRX leftShooter, rightShooter;
   WPI_TalonSRX tiltMotor = new WPI_TalonSRX(Constants.SHOOTER_TILT_MOTOR);
   double offsetX, offsetY;
+
   public double lSpeed = 0, rSpeed = 0;
-  int leftCount = 0, rightCount = 0;
+  public int leftCount = 0, rightCount = 0;
   int pLeftCount = 0, pRightCount = 0;
   long lastTime = 0;
-  DigitalInput leftProxy, rightProxy;
+  boolean pLeftGet = false, pRightGet = false;
+
+  public DigitalInput leftProxy, rightProxy;
   Encoder tiltEncoder;
+  public Thread encoderThread;
+
   public Shooter() {
     super(new PIDController(0, 0, 0));
     initFile();
     ReadFromFile();
     leftShooter = new WPI_TalonSRX(Constants.LEFT_SHOOT_MOTOR);
     rightShooter = new WPI_TalonSRX(Constants.RIGHT_SHOOT_MOTOR);
-    
+
     leftProxy = new DigitalInput(Constants.LEFT_SHOOTER_PROXY);
     rightProxy = new DigitalInput(Constants.RIGHT_SHOOTER_PROXY);
     tiltEncoder = new Encoder(8, 9);
-    lastTime = System.nanoTime();
-    new Runnable(){
-    
+    lastTime = 0;
+
+    encoderThread = new Thread(new Runnable() {
+
       @Override
       public void run() {
         // TODO Auto-generated method stub
-          if(leftProxy.get())leftCount++;
-          if(rightProxy.get())rightCount++;
-          if(System.nanoTime()-lastTime>1000){
-            lSpeed = (leftCount-pLeftCount)/(System.nanoTime()-lastTime);
-            rSpeed = (rightCount-pRightCount)/(System.nanoTime()-lastTime);
-            pRightCount = rightCount;
-            pLeftCount = leftCount;
-            lastTime = System.nanoTime();
+        while (true) {
+          if (leftProxy.get() && !pLeftGet) {
+            leftCount++;
+            pLeftGet = true;
           }
+          if(!leftProxy.get()) pLeftGet = false;
+          if (rightProxy.get() && !pRightGet){
+            rightCount++;
+            pRightGet = true;
+          }
+          if(!rightProxy.get()) pRightGet = false;
+          leftShooter.setSelectedSensorPosition(leftCount);
+          rightShooter.setSelectedSensorPosition(rightCount);
 
+          // if (System.currentTimeMillis() - lastTime >= 30) {
+          //   long deltaTime = System.currentTimeMillis() - lastTime;
+          //   SmartDashboard.putNumber("delta",deltaTime);
+          //   // lSpeed = 60000.0*(((leftCount - pLeftCount)/2.0) / ((double) deltaTime));
+          //   // rSpeed = 60000.0*(((rightCount - pRightCount)/2.0) / ((double) deltaTime));
+            
+          //   // pRightCount = rightCount;
+          //   // pLeftCount = leftCount;
+
+
+
+          //   lastTime = System.currentTimeMillis();
+          // }
+          // try {
+          //    encoderThread.sleep(0, 800);
+          // } catch (InterruptedException e) {
+          //   // TODO Auto-generated catch block
+          //   e.printStackTrace();
+          // }
+        }
       }
-    };
+    });
+    encoderThread.start();
   }
 
   public void setOffsets(double x, double y) {
@@ -100,8 +131,8 @@ public class Shooter extends PIDSubsystem {
       if (val != null) {
         double x = Double.parseDouble(val.split(",")[0]);
         double y = Double.parseDouble(val.split(",")[0]);
-        SmartDashboard.putNumber("X",x);
-        SmartDashboard.putNumber("Y",y);
+        SmartDashboard.putNumber("X", x);
+        SmartDashboard.putNumber("Y", y);
         setOffsets(x, y);
       }
     } catch (IOException e) {
@@ -112,7 +143,7 @@ public class Shooter extends PIDSubsystem {
   // Write to file
   public void WriteToFile() {
     try {
-      bw.write(offsetX+","+offsetY);
+      bw.write(offsetX + "," + offsetY);
       bw.close();
       fw.close();
     } catch (IOException e) {
@@ -132,6 +163,7 @@ public class Shooter extends PIDSubsystem {
     // Return the process variable measurement here
     return 0;
   }
+
   @Override
   public void periodic() {
     // TODO Auto-generated method stub

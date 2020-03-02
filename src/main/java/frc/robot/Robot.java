@@ -8,6 +8,8 @@
 package frc.robot;
 
 
+import java.lang.Thread.State;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -54,8 +56,18 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    SmartDashboard.putNumber("Left Speed", ((Constants.NANO_TIME_SCALE/1000)*RobotContainer.shooter.lSpeed)*(60/2));
-    SmartDashboard.putNumber("Right Speed", ((Constants.NANO_TIME_SCALE/1000)*RobotContainer.shooter.rSpeed)*);
+    double leftSpeed = RobotContainer.shooter.lSpeed;
+    System.out.println(leftSpeed);
+    // System.out.println(RobotContainer.shooter.encoderThread.getState());
+    SmartDashboard.putNumber("Left Speed", RobotContainer.shooter.leftShooter.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Right Speed", RobotContainer.shooter.rightShooter.getSelectedSensorVelocity());
+    // SmartDashboard.putBoolean("Left Proxy", RobotContainer.shooter.leftProxy.get());
+    // SmartDashboard.putBoolean("Right Proxy", RobotContainer.shooter.rightProxy.get());
+
+    SmartDashboard.putNumber("Left Count", RobotContainer.shooter.leftCount);
+    SmartDashboard.putNumber("Right Count", RobotContainer.shooter.rightCount);
+
+    
   }
 
   /**

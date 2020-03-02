@@ -50,8 +50,8 @@ public final class Constants {
 
     // Sensors
     public static final int
-    LEFT_SHOOTER_PROXY = 6,
-    RIGHT_SHOOTER_PROXY = 7
+    LEFT_SHOOTER_PROXY = 7,
+    RIGHT_SHOOTER_PROXY = 6
     ;
-    public static final int NANO_TIME_SCALE = 1*(int)(Math.pow(10, 9));
+    public static final long NANO_TIME_SCALE = 1*(int)(Math.pow(10, 9));
 }
