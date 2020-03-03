@@ -29,6 +29,7 @@ public class SpinControlWheel extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    RobotContainer.wheelSpinner.extend();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -45,6 +46,7 @@ public class SpinControlWheel extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     RobotContainer.wheelSpinner.motor.set(0);
+    RobotContainer.wheelSpinner.retract();
   }
 
   // Returns true when the command should end.

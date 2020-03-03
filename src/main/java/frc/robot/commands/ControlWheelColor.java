@@ -24,7 +24,7 @@ public class ControlWheelColor extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // RobotContainer.wheelSpinner.setSetpoint(Constants.TICKS_PER_SEGMENT+RobotContainer.wheelSpinner.getPos());
+    RobotContainer.wheelSpinner.extend();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,6 +37,7 @@ public class ControlWheelColor extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     RobotContainer.wheelSpinner.motor.set(0);
+    RobotContainer.wheelSpinner.retract();
   }
 
   // Returns true when the command should end.
