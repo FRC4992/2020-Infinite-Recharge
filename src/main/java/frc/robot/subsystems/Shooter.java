@@ -15,6 +15,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
@@ -33,74 +37,28 @@ public class Shooter extends PIDSubsystem {
   static FileReader fr;
   static FileWriter fw;
 
-  public WPI_TalonSRX leftShooter, rightShooter;
+  public CANSparkMax leftShooter, rightShooter;
   WPI_TalonSRX tiltMotor = new WPI_TalonSRX(Constants.SHOOTER_TILT_MOTOR);
   double offsetX, offsetY;
 
-  public double lSpeed = 0, rSpeed = 0;
-  public int leftCount = 0, rightCount = 0;
-  int pLeftCount = 0, pRightCount = 0;
-  long lastTime = 0;
-  boolean pLeftGet = false, pRightGet = false;
 
   public DigitalInput leftProxy, rightProxy;
   Encoder tiltEncoder;
-  public Thread encoderThread;
+  CANEncoder leftShootEncoder, rightShootEncoder;
+  PIDController deltaControl;
+  double deltaError;
 
   public Shooter() {
     super(new PIDController(0, 0, 0));
     initFile();
     ReadFromFile();
-    leftShooter = new WPI_TalonSRX(Constants.LEFT_SHOOT_MOTOR);
-    rightShooter = new WPI_TalonSRX(Constants.RIGHT_SHOOT_MOTOR);
-
-    leftProxy = new DigitalInput(Constants.LEFT_SHOOTER_PROXY);
-    rightProxy = new DigitalInput(Constants.RIGHT_SHOOTER_PROXY);
-    tiltEncoder = new Encoder(8, 9);
-    lastTime = 0;
-
-    encoderThread = new Thread(new Runnable() {
-
-      @Override
-      public void run() {
-        // TODO Auto-generated method stub
-        while (true) {
-          if (leftProxy.get() && !pLeftGet) {
-            leftCount++;
-            pLeftGet = true;
-          }
-          if(!leftProxy.get()) pLeftGet = false;
-          if (rightProxy.get() && !pRightGet){
-            rightCount++;
-            pRightGet = true;
-          }
-          if(!rightProxy.get()) pRightGet = false;
-          leftShooter.setSelectedSensorPosition(leftCount);
-          rightShooter.setSelectedSensorPosition(rightCount);
-
-          // if (System.currentTimeMillis() - lastTime >= 30) {
-          //   long deltaTime = System.currentTimeMillis() - lastTime;
-          //   SmartDashboard.putNumber("delta",deltaTime);
-          //   // lSpeed = 60000.0*(((leftCount - pLeftCount)/2.0) / ((double) deltaTime));
-          //   // rSpeed = 60000.0*(((rightCount - pRightCount)/2.0) / ((double) deltaTime));
-            
-          //   // pRightCount = rightCount;
-          //   // pLeftCount = leftCount;
-
-
-
-          //   lastTime = System.currentTimeMillis();
-          // }
-          // try {
-          //    encoderThread.sleep(0, 800);
-          // } catch (InterruptedException e) {
-          //   // TODO Auto-generated catch block
-          //   e.printStackTrace();
-          // }
-        }
-      }
-    });
-    encoderThread.start();
+    leftShooter = new CANSparkMax(Constants.LEFT_SHOOT_MOTOR,MotorType.kBrushless);
+    rightShooter = new CANSparkMax(Constants.RIGHT_SHOOT_MOTOR,MotorType.kBrushless);//right side is master
+    leftShooter.setIdleMode(IdleMode.kCoast);
+    rightShooter.setIdleMode(IdleMode.kCoast);
+    leftShootEncoder = leftShooter.getEncoder();
+    rightShootEncoder = rightShooter.getEncoder();
+    deltaControl = new PIDController(0, 0, 0);
   }
 
   public void setOffsets(double x, double y) {
@@ -154,14 +112,14 @@ public class Shooter extends PIDSubsystem {
   @Override
   public void useOutput(double output, double setpoint) {
     // Use the output here
-    leftShooter.set(output);
+    leftShooter.set(output+deltaControl.calculate(deltaError));
     rightShooter.set(-output);
   }
 
   @Override
   public double getMeasurement() {
     // Return the process variable measurement here
-    return 0;
+    return rightShootEncoder.getVelocity();
   }
 
   @Override
@@ -169,5 +127,10 @@ public class Shooter extends PIDSubsystem {
     // TODO Auto-generated method stub
     super.periodic();
     SmartDashboard.putNumber("Tilt Encoder", tiltEncoder.get());
+    deltaError = rightShootEncoder.getVelocity()-leftShootEncoder.getVelocity();
+    SmartDashboard.putNumber("Left Speed", leftShootEncoder.getVelocity());
+    SmartDashboard.putNumber("Right Speed", rightShootEncoder.getVelocity());
+    SmartDashboard.putData("Master Controller",getController());
+    SmartDashboard.putData("Delta Controller",deltaControl);
   }
 }
