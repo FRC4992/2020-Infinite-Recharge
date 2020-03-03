@@ -51,7 +51,12 @@ public final class Constants {
     // Sensors
     public static final int
     LEFT_SHOOTER_PROXY = 7,
-    RIGHT_SHOOTER_PROXY = 6
-    ;
+    RIGHT_SHOOTER_PROXY = 6,
+    TOF = 15;
+
     public static final long NANO_TIME_SCALE = 1*(int)(Math.pow(10, 9));
+    public static double INTAKE_SENSOR_RANGE_MM = 55;
+    public static int INDEXER_TICKS_PER_SEGMENT = 2240;
+    public static int BALL_RANGE = 80;
+    public static int MAX_VELOCITY_ERROR = 20;
 }

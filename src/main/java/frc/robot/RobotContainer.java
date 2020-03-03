@@ -8,8 +8,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.Shooter;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.IntakeSequence;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -19,6 +24,8 @@ import frc.robot.subsystems.Shooter;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  public static Indexer indexer = new Indexer();
+  public static Intake intake = new Intake();
 
   public static Shooter shooter = new Shooter();
 
@@ -37,5 +44,14 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    Joystick stick = new Joystick(0);
+    JoystickButton intakeButton = new JoystickButton(stick, 3);
+    JoystickButton cycle = new JoystickButton(stick, 2);
+    JoystickButton full = new JoystickButton(stick,4);
+    full.whenHeld(new IntakeSequence());
+    intakeButton
+      .whenPressed(()->intake.intake())
+      .whenReleased(()->intake.stop());
+    cycle.whenPressed(()->indexer.cycleBalls());
   }
 }

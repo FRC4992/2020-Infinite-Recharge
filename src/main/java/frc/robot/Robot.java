@@ -56,16 +56,6 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    double leftSpeed = RobotContainer.shooter.lSpeed;
-    System.out.println(leftSpeed);
-    // System.out.println(RobotContainer.shooter.encoderThread.getState());
-    SmartDashboard.putNumber("Left Speed", RobotContainer.shooter.leftShooter.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("Right Speed", RobotContainer.shooter.rightShooter.getSelectedSensorVelocity());
-    // SmartDashboard.putBoolean("Left Proxy", RobotContainer.shooter.leftProxy.get());
-    // SmartDashboard.putBoolean("Right Proxy", RobotContainer.shooter.rightProxy.get());
-
-    SmartDashboard.putNumber("Left Count", RobotContainer.shooter.leftCount);
-    SmartDashboard.putNumber("Right Count", RobotContainer.shooter.rightCount);
 
     
   }
@@ -101,6 +91,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     // RobotContainer.shooter.ReadFromFile();
+   RobotContainer.indexer.indexerMotor.setSelectedSensorPosition(0);
   }
 
   /**
