@@ -31,7 +31,7 @@ public class IntakeSequence extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(RobotContainer.indexer.getController().atSetpoint() || RobotContainer.indexer.tof.getRange()<80){
+    if(RobotContainer.indexer.tof.getRange()<80 && RobotContainer.indexer.getController().getVelocityError()<20){
       RobotContainer.intake.intake();
     }else{
       RobotContainer.intake.stop();
@@ -45,15 +45,12 @@ public class IntakeSequence extends CommandBase {
         RobotContainer.indexer.cycleBalls();
       }
     }
-
-
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     RobotContainer.intake.stop();
-
   }
 
   // Returns true when the command should end.

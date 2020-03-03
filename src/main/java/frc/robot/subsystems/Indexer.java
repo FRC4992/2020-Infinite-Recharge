@@ -44,6 +44,7 @@ public class Indexer extends PIDSubsystem {
     SmartDashboard.putBoolean("Indexer Done", getController().atSetpoint());
     SmartDashboard.putBoolean("TOF",seeBall());
     SmartDashboard.putNumber("TOF Range", tof.getRange());
+    SmartDashboard.putNumber("Vel error", getController().getVelocityError());
   }
 
   @Override
