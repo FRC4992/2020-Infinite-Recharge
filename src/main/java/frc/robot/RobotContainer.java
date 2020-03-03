@@ -8,7 +8,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.ControlWheelColor;
+import frc.robot.commands.SpinControlWheel;
+import frc.robot.subsystems.ControlWheelSpinner;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -18,7 +23,7 @@ import edu.wpi.first.wpilibj.XboxController;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-
+  public static ControlWheelSpinner wheelSpinner = new ControlWheelSpinner();
 
 
   /**
@@ -36,5 +41,10 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    Joystick stick = new Joystick(0);
+    JoystickButton position = new JoystickButton(stick, 1);
+    position.whenPressed(new SpinControlWheel(4));
+    JoystickButton color = new JoystickButton(stick,2);
+    color.whenPressed(new ControlWheelColor());
   }
 }

@@ -22,7 +22,7 @@ public class ControlWheelSpinner extends SubsystemBase {
   /**
    * Creates a new ControlWheelSpinner.
    */
-  private WPI_TalonSRX motor;
+  public WPI_TalonSRX motor;
   ColorSensorV3 colorSens = new ColorSensorV3(I2C.Port.kOnboard);
   ColorMatch matcher = new ColorMatch();
   public WHEEL_COLORS currentColor = WHEEL_COLORS.NOT_FOUND;
