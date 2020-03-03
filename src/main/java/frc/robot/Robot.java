@@ -76,7 +76,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-   
+   RobotContainer.indexer.indexerMotor.setSelectedSensorPosition(0);
   }
 
   /**

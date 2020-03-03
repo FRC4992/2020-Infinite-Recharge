@@ -32,10 +32,10 @@ public class IntakeSequence extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(RobotContainer.indexer.tof.getRange()<Constants.BALL_RANGE && RobotContainer.indexer.getController().getVelocityError()<Constants.MAX_VELOCITY_ERROR){
-      RobotContainer.intake.intake();
-    }else{
+    if(RobotContainer.indexer.tof.getRange()<Constants.BALL_RANGE && RobotContainer.indexer.getController().getVelocityError()>Constants.MAX_VELOCITY_ERROR){
       RobotContainer.intake.stop();
+    }else{
+      RobotContainer.intake.intake();
     }
 
     if(!ballEntered && RobotContainer.indexer.seeBall()){
