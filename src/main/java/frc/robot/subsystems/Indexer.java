@@ -25,7 +25,7 @@ public class Indexer extends PIDSubsystem {
   public TimeOfFlight tof;
   public static int ballCount = 0;
   public Indexer() {
-    super(new PIDController(0.0001,0,0));
+    super(new PIDController(0.00016,0,0));
     indexerMotor = new WPI_TalonSRX(Constants.INDEX_MOTOR);
     tof = new TimeOfFlight(Constants.TOF);
     getController().setTolerance(50,10);
@@ -42,11 +42,13 @@ public class Indexer extends PIDSubsystem {
     SmartDashboard.putData(getController());
     SmartDashboard.putNumber("Ball Count", ballCount);
     SmartDashboard.putBoolean("Indexer Done", getController().atSetpoint());
+    SmartDashboard.putBoolean("TOF",seeBall());
+    SmartDashboard.putNumber("TOF Range", tof.getRange());
   }
 
   @Override
   protected void useOutput(double output, double setpoint) {
-    indexerMotor.set(output);
+    indexerMotor.set(Math.signum(output)*(Math.min(0.2,Math.abs(output))));
   }
 
   @Override

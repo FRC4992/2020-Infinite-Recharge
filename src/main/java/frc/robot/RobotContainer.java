@@ -46,7 +46,8 @@ public class RobotContainer {
     Joystick stick = new Joystick(0);
     JoystickButton intakeButton = new JoystickButton(stick, 3);
     JoystickButton cycle = new JoystickButton(stick, 2);
-    // intake.whenHeld(new IntakeSequence());
+    JoystickButton full = new JoystickButton(stick,4);
+    full.whenHeld(new IntakeSequence());
     intakeButton
       .whenPressed(()->intake.intake())
       .whenReleased(()->intake.stop());
