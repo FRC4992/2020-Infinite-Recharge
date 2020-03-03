@@ -52,4 +52,6 @@ public final class Constants {
     TOF = 15;
     public static double INTAKE_SENSOR_RANGE_MM = 55;
     public static int INDEXER_TICKS_PER_SEGMENT = 2240;
+    public static int BALL_RANGE = 80;
+    public static int MAX_VELOCITY_ERROR = 20;
 }

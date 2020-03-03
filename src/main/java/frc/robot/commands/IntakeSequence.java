@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Indexer;
 
@@ -31,7 +32,7 @@ public class IntakeSequence extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(RobotContainer.indexer.tof.getRange()<80 && RobotContainer.indexer.getController().getVelocityError()<20){
+    if(RobotContainer.indexer.tof.getRange()<Constants.BALL_RANGE && RobotContainer.indexer.getController().getVelocityError()<Constants.MAX_VELOCITY_ERROR){
       RobotContainer.intake.intake();
     }else{
       RobotContainer.intake.stop();
