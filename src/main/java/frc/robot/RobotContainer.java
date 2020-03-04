@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.IntakeSequence;
+import frc.robot.commands.TempShoot;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 
@@ -22,11 +23,12 @@ import frc.robot.subsystems.Intake;
  * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
  * (including subsystems, commands, and button mappings) should be declared here.
  */
+
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static Indexer indexer = new Indexer();
   public static Intake intake = new Intake();
-
+  public static Joystick stick;
   public static Shooter shooter = new Shooter();
 
   /**
@@ -34,7 +36,9 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Configure the button bindings
+    stick = new Joystick(0);
     configureButtonBindings();
+    
   }
 
   /**
@@ -44,14 +48,9 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    Joystick stick = new Joystick(0);
-    JoystickButton intakeButton = new JoystickButton(stick, 3);
-    JoystickButton cycle = new JoystickButton(stick, 2);
-    JoystickButton full = new JoystickButton(stick,4);
+    JoystickButton full = new JoystickButton(stick,3);
     full.whenHeld(new IntakeSequence());
-    intakeButton
-      .whenPressed(()->intake.intake())
-      .whenReleased(()->intake.stop());
-    cycle.whenPressed(()->indexer.cycleBalls());
+    JoystickButton shoot = new JoystickButton(stick,2);
+    shoot.whenHeld(new TempShoot());
   }
 }

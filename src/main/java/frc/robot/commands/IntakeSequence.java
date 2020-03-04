@@ -46,6 +46,9 @@ public class IntakeSequence extends CommandBase {
         RobotContainer.indexer.cycleBalls();
       }
     }
+    if(!RobotContainer.indexer.seeBall()){
+      ballEntered = false;
+    }
   }
 
   // Called once the command ends or is interrupted.

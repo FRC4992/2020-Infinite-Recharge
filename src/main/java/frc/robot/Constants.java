@@ -27,8 +27,8 @@ public final class Constants {
     BOTTOM_LEFT_DRIVE = 2,
     TOP_RIGHT_DRIVE = 3,
     BOTTOM_RIGHT_DRIVE = 4,
-    INTAKE_MOTOR = 5,
-    INDEX_MOTOR = 6,
+    INTAKE_MOTOR = 0,
+    INDEX_MOTOR = 7,
     LEFT_SHOOT_MOTOR = 9,
     RIGHT_SHOOT_MOTOR = 10,
     TELESCOPE_MOTOR = 7,
@@ -55,7 +55,7 @@ public final class Constants {
     TOF = 15;
 
     public static final long NANO_TIME_SCALE = 1*(int)(Math.pow(10, 9));
-    public static double INTAKE_SENSOR_RANGE_MM = 55;
+    public static double INTAKE_SENSOR_RANGE_MM = 60;
     public static int INDEXER_TICKS_PER_SEGMENT = 2240;
     public static int BALL_RANGE = 80;
     public static int MAX_VELOCITY_ERROR = 20;

@@ -38,11 +38,9 @@ public class Shooter extends PIDSubsystem {
   static FileWriter fw;
 
   public CANSparkMax leftShooter, rightShooter;
-  WPI_TalonSRX tiltMotor = new WPI_TalonSRX(Constants.SHOOTER_TILT_MOTOR);
+  public WPI_TalonSRX tiltMotor = new WPI_TalonSRX(Constants.SHOOTER_TILT_MOTOR);
   double offsetX, offsetY;
 
-
-  public DigitalInput leftProxy, rightProxy;
   Encoder tiltEncoder;
   CANEncoder leftShootEncoder, rightShootEncoder;
   PIDController deltaControl;
@@ -59,6 +57,7 @@ public class Shooter extends PIDSubsystem {
     leftShootEncoder = leftShooter.getEncoder();
     rightShootEncoder = rightShooter.getEncoder();
     deltaControl = new PIDController(0, 0, 0);
+    tiltEncoder = new Encoder(8, 9);
   }
 
   public void setOffsets(double x, double y) {

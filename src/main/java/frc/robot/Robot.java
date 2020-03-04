@@ -7,12 +7,12 @@
 
 package frc.robot;
 
-
 import java.lang.Thread.State;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Indexer;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -99,12 +99,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    double rStick = RobotContainer.stick.getRawAxis(5);
+    RobotContainer.shooter.tiltMotor.set(-Math.signum(rStick)*Math.pow(rStick,2));
   }
 
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    Indexer.ballCount = 0;
   }
 
   /**
