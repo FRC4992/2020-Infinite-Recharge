@@ -40,8 +40,8 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    Joystick stick = new Joystick(0);
-    JoystickButton winchTest = new JoystickButton(stick, 1);
-    winchTest.whenHeld(new WinchUp());//TODO proper binding
+    Joystick secondaryDrive = new Joystick(1);
+    JoystickButton winch = new JoystickButton(secondaryDrive, 5);
+    winch.whenHeld(new WinchUp());
   }
 }
