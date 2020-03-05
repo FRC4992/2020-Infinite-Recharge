@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
 public class TelescopeDown extends CommandBase {
@@ -38,6 +39,6 @@ public class TelescopeDown extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.telescope.limitBottom.get();
+    return RobotContainer.telescope.encoder.get()<=Constants.TELESCOPE_MIN;
   }
 }

@@ -49,6 +49,10 @@ public final class Constants {
 
     // Sensors
     public static final int
-    LIMIT_SWITCH_TOP = 1,
-    LIMIT_SWITCH_BOTTOM = 2;
+    TELESCOPE_ENCODER_A = 1,
+    TELESCOPE_ENCODER_B = 2
+    ;
+    public static final double 
+    TELESCOPE_MAX = 500,
+    TELESCOPE_MIN = 0;
 }
