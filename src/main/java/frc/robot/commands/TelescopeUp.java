@@ -8,38 +8,37 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
-public class WinchUp extends CommandBase {
+public class TelescopeUp extends CommandBase {
   /**
-   * Creates a new WinchUp.
+   * Creates a new TelescopeUp.
    */
-  public WinchUp() {
+  public TelescopeUp() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.winch);
+    addRequirements(RobotContainer.telescope);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.winch.setSpeed(0.5);
+    RobotContainer.telescope.setSpeed(0.6);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.winch.setSpeed(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return RobotContainer.telescope.encoder.get()>=Constants.TELESCOPE_MAX;
   }
 }

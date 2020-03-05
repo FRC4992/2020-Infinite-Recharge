@@ -7,6 +7,11 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -15,10 +20,17 @@ public class Telescope extends SubsystemBase {
   /**
    * Creates a new Telescope.
    */
-  VictorSP motor;
+  VictorSPX motor;
+  public Encoder encoder;
   public Telescope() {
-    motor = new VictorSP(Constants.TELESCOPE_MOTOR);
+    motor = new VictorSPX(Constants.TELESCOPE_MOTOR);
+    encoder = new Encoder(Constants.TELESCOPE_ENCODER_A,Constants.TELESCOPE_ENCODER_B);
   }
+
+  public void setSpeed(double speed) {
+    motor.set(ControlMode.PercentOutput,speed);
+  }
+  
 
   @Override
   public void periodic() {

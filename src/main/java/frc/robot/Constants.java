@@ -48,4 +48,11 @@ public final class Constants {
     STICK = 0;
 
     // Sensors
+    public static final int
+    TELESCOPE_ENCODER_A = 1,
+    TELESCOPE_ENCODER_B = 2
+    ;
+    public static final double 
+    TELESCOPE_MAX = 500,
+    TELESCOPE_MIN = 0;
 }

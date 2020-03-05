@@ -11,8 +11,11 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.TelescopeDown;
+import frc.robot.commands.TelescopeUp;
 import frc.robot.commands.WinchUp;
 import frc.robot.subsystems.Winch;
+import frc.robot.subsystems.Telescope;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -23,6 +26,7 @@ import frc.robot.subsystems.Winch;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static Winch winch = new Winch();
+  public static Telescope telescope = new Telescope();
 
 
   /**
@@ -43,5 +47,8 @@ public class RobotContainer {
     Joystick secondaryDrive = new Joystick(1);
     JoystickButton winch = new JoystickButton(secondaryDrive, 5);
     winch.whenHeld(new WinchUp());
+    winch.whenPressed(new TelescopeDown());
+    JoystickButton extendTelescope = new JoystickButton(secondaryDrive, 6);
+    extendTelescope.whenHeld(new TelescopeUp());
   }
 }
