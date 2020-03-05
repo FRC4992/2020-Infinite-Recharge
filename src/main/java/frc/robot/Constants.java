@@ -23,10 +23,10 @@ public final class Constants {
 
     // Motors
     public static final int
-    TOP_LEFT_DRIVE = 1,
-    BOTTOM_LEFT_DRIVE = 2,
+    TOP_LEFT_DRIVE = 4,
+    BOTTOM_LEFT_DRIVE = 1,
     TOP_RIGHT_DRIVE = 3,
-    BOTTOM_RIGHT_DRIVE = 4,
+    BOTTOM_RIGHT_DRIVE = 2,
     INTAKE_MOTOR = 0,
     INDEX_MOTOR = 7,
     LEFT_SHOOT_MOTOR = 9,
@@ -39,7 +39,7 @@ public final class Constants {
 
     // LEDs
     public static final int
-    LED_PWM = 0,
+    LED_PWM = 7,
     LED_LENGTH = 60,
     LED_MIDDLE_START = 19,
     LED_MIDDLE_END = 38;

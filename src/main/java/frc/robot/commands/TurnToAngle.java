@@ -8,57 +8,59 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Drive.SENSOR_TYPES;
 
-public class IntakeSequence extends CommandBase {
+public class TurnToAngle extends CommandBase {
   /**
-   * Creates a new IntakeSequence.
+   * Creates a new TurnToAngle.
    */
-  boolean ballEntered = false;
-  public IntakeSequence() {
+  public static enum TURN_TYPE {
+    ABSOLUTE, RELATIVE
+  }
+
+  TURN_TYPE turnType;
+  double setpoint;
+  double startingValue = 0;
+
+  public TurnToAngle(TURN_TYPE type, double setpoint) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.indexer);
-    addRequirements(RobotContainer.intake);
+    addRequirements(RobotContainer.drive);
+    this.turnType = type;
+    this.setpoint = setpoint;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    RobotContainer.drive.enable();
+    RobotContainer.drive.setCurrentSensor(SENSOR_TYPES.ROTATION);
+    startingValue = RobotContainer.drive.getMeasurement();
+    switch (turnType) {
+    case ABSOLUTE:
+      RobotContainer.drive.setSetpoint(setpoint);
+      break;
+    case RELATIVE:
+    RobotContainer.drive.setSetpoint(setpoint+startingValue);
+      break;
+    }
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(RobotContainer.indexer.tof.getRange()<Constants.BALL_RANGE && RobotContainer.indexer.getController().getVelocityError()>Constants.MAX_VELOCITY_ERROR){
-      RobotContainer.intake.stop();
-    }else{
-      RobotContainer.intake.intake();
-    }
-
-    if(!ballEntered && RobotContainer.indexer.seeBall()){
-      ballEntered = true;
-      System.out.println("Cycle!");
-      Indexer.ballCount++;
-      if(Indexer.ballCount<5){
-        RobotContainer.indexer.cycleBalls();
-      }
-    }
-    if(!RobotContainer.indexer.seeBall()){
-      ballEntered = false;
-    }
+    RobotContainer.drive.drive.feedWatchdog();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.intake.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Indexer.ballCount>=5;
+    return RobotContainer.drive.getController().atSetpoint();
   }
 }

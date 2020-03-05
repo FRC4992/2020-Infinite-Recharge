@@ -13,6 +13,10 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Indexer;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.LEDRunner.AnimationMode;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,6 +29,10 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  public AddressableLED led;
+  public static LEDRunner ledRunner;
+  private Thread ledThread;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -35,6 +43,16 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    led = new AddressableLED(Constants.LED_PWM);
+    ledRunner = new LEDRunner();
+    ledThread = new Thread(ledRunner);
+    ledThread.start();
+    
+    led.setLength(ledRunner.buffer.getLength());
+    led.setData(ledRunner.buffer);
+    led.start();
+  
+    ledRunner.setAnimation(AnimationMode.INIT);
   }
 
   /**
@@ -56,8 +74,7 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-
-    
+    led.setData(ledRunner.buffer);
   }
 
   /**
@@ -66,10 +83,14 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     // RobotContainer.shooter.WriteToFile();
+    
   }
 
   @Override
   public void disabledPeriodic() {
+    if(ledRunner.currentAnimation == AnimationMode.OFF){
+      ledRunner.setAnimation(AnimationMode.DISABLED);
+    }
   }
 
   /**
@@ -92,6 +113,8 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     // RobotContainer.shooter.ReadFromFile();
    RobotContainer.indexer.indexerMotor.setSelectedSensorPosition(0);
+   m_robotContainer.arcadeDriveCommand.schedule(true);
+   ledRunner.setAnimation(AnimationMode.FULL_RAINBOW);
   }
 
   /**
@@ -101,6 +124,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     double rStick = RobotContainer.stick.getRawAxis(5);
     RobotContainer.shooter.tiltMotor.set(-Math.signum(rStick)*Math.pow(rStick,2));
+    CommandScheduler.getInstance().run();
   }
 
   @Override
