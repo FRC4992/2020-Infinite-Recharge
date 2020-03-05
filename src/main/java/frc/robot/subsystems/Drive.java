@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.commands.ArcadeDrive;
 
 public class Drive extends PIDSubsystem {
   /**
@@ -30,7 +31,7 @@ public class Drive extends PIDSubsystem {
   SpeedControllerGroup left, right;
   public DifferentialDrive drive;
   public DoubleSolenoid shifter;
-  AHRS navx;
+  public AHRS navx;
   CANEncoder leftEncoder, rightEncoder;
   public PIDController autoDist = new PIDController(0.15, 0, 0);
   public PIDController autoRotate = new PIDController(0.015, 0, 0);
@@ -54,7 +55,7 @@ public class Drive extends PIDSubsystem {
 
   public Drive() {
     super(new PIDController(0, 0, 0));
-
+    setDefaultCommand(new ArcadeDrive());
     frontLeft = new CANSparkMax(Constants.TOP_LEFT_DRIVE, MotorType.kBrushless);
     frontRight = new CANSparkMax(Constants.TOP_RIGHT_DRIVE, MotorType.kBrushless);
     backLeft = new CANSparkMax(Constants.BOTTOM_LEFT_DRIVE, MotorType.kBrushless);

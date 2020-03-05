@@ -11,11 +11,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Drive.SENSOR_TYPES;
 
-public class PowercellAlign extends CommandBase {
+public class ShooterAlign extends CommandBase {
   /**
-   * Creates a new PowercellAlign.
+   * Creates a new ShooterAlign.
    */
-  public PowercellAlign() {
+  public ShooterAlign() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.drive);
   }
@@ -24,27 +24,25 @@ public class PowercellAlign extends CommandBase {
   @Override
   public void initialize() {
     RobotContainer.drive.enable();
-    RobotContainer.drive.setCurrentSensor(SENSOR_TYPES.POWERCELL);
+    RobotContainer.drive.setCurrentSensor(SENSOR_TYPES.LIMELIGHT_ROTATION);
     RobotContainer.drive.setSetpoint(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // RobotContainer.drive.displayAlign(255, 175, 0,
-    // AnimationMode.SEARCHING_YELLOW);
+    RobotContainer.shooter.tiltController.setSetpoint(0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // System.out.println("AutoCenter ended");
     RobotContainer.drive.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.drive.getController().atSetpoint();
+    return false;
   }
 }

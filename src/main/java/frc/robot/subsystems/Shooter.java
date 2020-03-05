@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class Shooter extends PIDSubsystem {
   /**
@@ -42,6 +43,7 @@ public class Shooter extends PIDSubsystem {
   double offsetX, offsetY;
 
   Encoder tiltEncoder;
+  public PIDController tiltController;
   CANEncoder leftShootEncoder, rightShootEncoder;
   PIDController deltaControl;
   double deltaError;
@@ -58,6 +60,7 @@ public class Shooter extends PIDSubsystem {
     rightShootEncoder = rightShooter.getEncoder();
     deltaControl = new PIDController(0, 0, 0);
     tiltEncoder = new Encoder(8, 9);
+    tiltController = new PIDController(0.001, 0, 0);
   }
 
   public void setOffsets(double x, double y) {
@@ -118,17 +121,18 @@ public class Shooter extends PIDSubsystem {
   @Override
   public double getMeasurement() {
     // Return the process variable measurement here
-    return rightShootEncoder.getVelocity();
+    return -rightShootEncoder.getVelocity();
   }
 
   @Override
   public void periodic() {
     // TODO Auto-generated method stub
     super.periodic();
+    tiltMotor.set(tiltController.calculate(RobotContainer.limelightY()));
     SmartDashboard.putNumber("Tilt Encoder", tiltEncoder.get());
     deltaError = rightShootEncoder.getVelocity()-leftShootEncoder.getVelocity();
     SmartDashboard.putNumber("Left Speed", leftShootEncoder.getVelocity());
-    SmartDashboard.putNumber("Right Speed", rightShootEncoder.getVelocity());
+    SmartDashboard.putNumber("Right Speed", -rightShootEncoder.getVelocity());
     SmartDashboard.putData("Master Controller",getController());
     SmartDashboard.putData("Delta Controller",deltaControl);
   }

@@ -75,6 +75,12 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     led.setData(ledRunner.buffer);
+    SmartDashboard.putNumber("DX", RobotContainer.drive.navx.getDisplacementX());
+    SmartDashboard.putNumber("DY", RobotContainer.drive.navx.getDisplacementY());
+    SmartDashboard.putNumber("DZ", RobotContainer.drive.navx.getDisplacementZ());
+    SmartDashboard.putNumber("RX", RobotContainer.drive.navx.getRawGyroX());
+    SmartDashboard.putNumber("RY", RobotContainer.drive.navx.getRawGyroY());
+    SmartDashboard.putNumber("RZ", RobotContainer.drive.navx.getRawGyroZ());
   }
 
   /**
@@ -113,7 +119,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     // RobotContainer.shooter.ReadFromFile();
    RobotContainer.indexer.indexerMotor.setSelectedSensorPosition(0);
-   m_robotContainer.arcadeDriveCommand.schedule(true);
+  //  m_robotContainer.arcadeDriveCommand.schedule(true);
    ledRunner.setAnimation(AnimationMode.FULL_RAINBOW);
   }
 
@@ -123,7 +129,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     double rStick = RobotContainer.stick.getRawAxis(5);
-    RobotContainer.shooter.tiltMotor.set(-Math.signum(rStick)*Math.pow(rStick,2));
+    RobotContainer.shooter.tiltMotor.set(-Math.signum(rStick)*Math.pow(rStick,2));//TODO remove this
     CommandScheduler.getInstance().run();
   }
 

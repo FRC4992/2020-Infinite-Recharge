@@ -16,11 +16,16 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.IntakeSequence;
+import frc.robot.commands.PowercellAlign;
 import frc.robot.commands.TempShoot;
+import frc.robot.commands.TurnToAngle;
+import frc.robot.commands.TurnToAngle.TURN_TYPE;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ArcadeDrive;
+import frc.robot.commands.AutoDistAndCenter;
+import frc.robot.commands.DriveDist;
 import frc.robot.subsystems.Drive;
 
 /**
@@ -85,5 +90,18 @@ public class RobotContainer {
     full.whenHeld(new IntakeSequence());
     JoystickButton shoot = new JoystickButton(stick,2);
     shoot.whenHeld(new TempShoot());
+
+    JoystickButton powerAlign = new JoystickButton(stick,1);
+    powerAlign.whenHeld(new PowercellAlign());
+
+    Joystick secondStick = new Joystick(1);
+    JoystickButton autoDistAndCenter = new JoystickButton(secondStick, 1);
+    autoDistAndCenter.whenHeld(new AutoDistAndCenter());
+
+    JoystickButton driveOneMeter = new JoystickButton(secondStick,2);
+    driveOneMeter.whenHeld(new DriveDist(1));
+
+    JoystickButton rotate90 = new JoystickButton(secondStick,3);
+    rotate90.whenHeld(new TurnToAngle(TURN_TYPE.RELATIVE, 90));
   }
 }

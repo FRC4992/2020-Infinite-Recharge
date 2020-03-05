@@ -8,37 +8,37 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Drive.SENSOR_TYPES;
 
-public class PowercellAlign extends CommandBase {
+public class DriveDist extends CommandBase {
   /**
-   * Creates a new PowercellAlign.
+   * Creates a new DriveDist.
    */
-  public PowercellAlign() {
+  double dist;
+  public DriveDist(double dist) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.drive);
+    this.dist = dist;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     RobotContainer.drive.enable();
-    RobotContainer.drive.setCurrentSensor(SENSOR_TYPES.POWERCELL);
-    RobotContainer.drive.setSetpoint(0);
+    RobotContainer.drive.setCurrentSensor(SENSOR_TYPES.DISTANCE);
+    RobotContainer.drive.setSetpoint(dist*Constants.DRIVE_TICKS_PER_METER);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // RobotContainer.drive.displayAlign(255, 175, 0,
-    // AnimationMode.SEARCHING_YELLOW);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // System.out.println("AutoCenter ended");
     RobotContainer.drive.stop();
   }
 

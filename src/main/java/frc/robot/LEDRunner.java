@@ -47,7 +47,12 @@ public class LEDRunner implements Runnable {
             } catch (Exception e) {
 
             }
-
+            try {
+                Thread.sleep(5);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
 
     }

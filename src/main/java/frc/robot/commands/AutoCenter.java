@@ -16,6 +16,7 @@ public class AutoCenter extends CommandBase {
    * Creates a new AutoCenter.
    */
   int ledIndex = 4, prevLedIndex = 4;
+
   public AutoCenter() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.drive);
@@ -30,7 +31,7 @@ public class AutoCenter extends CommandBase {
   }
 
   // Called every time the scheduler runs while the command is scheduled.
-  
+
   @Override
   public void execute() {
     // RobotContainer.drive.displayAlign(0, 255, 0, AnimationMode.SEARCHING_GREEN);
@@ -40,17 +41,13 @@ public class AutoCenter extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     System.out.println("AutoCenter ended");
-    if(!interrupted){
-      RobotContainer.drive.stop();
-      //RobotContainer.drive.disable();
-    }
-    
-    
+    RobotContainer.drive.stop();
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.drive.getController().atSetpoint() && RobotContainer.foundTarget();
+    return RobotContainer.drive.getController().atSetpoint();
   }
 }

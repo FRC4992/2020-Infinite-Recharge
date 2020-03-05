@@ -55,8 +55,10 @@ public final class Constants {
     TOF = 15;
 
     public static final long NANO_TIME_SCALE = 1*(int)(Math.pow(10, 9));
-    public static double INTAKE_SENSOR_RANGE_MM = 60;
-    public static int INDEXER_TICKS_PER_SEGMENT = 2240;
-    public static int BALL_RANGE = 80;
-    public static int MAX_VELOCITY_ERROR = 20;
+
+	public static final double DRIVE_TICKS_PER_METER = 15;
+    public static final double INTAKE_SENSOR_RANGE_MM = 60;
+    public static final int INDEXER_TICKS_PER_SEGMENT = 2240;
+    public static final int BALL_RANGE = 80;
+    public static final int MAX_VELOCITY_ERROR = 20;
 }
