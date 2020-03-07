@@ -7,16 +7,13 @@
 
 package frc.robot;
 
-import java.lang.Thread.State;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Indexer;
 import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.LEDRunner.AnimationMode;
+import frc.robot.commands.SetTilterTicks;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -75,12 +72,13 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     led.setData(ledRunner.buffer);
-    SmartDashboard.putNumber("DX", RobotContainer.drive.navx.getDisplacementX());
-    SmartDashboard.putNumber("DY", RobotContainer.drive.navx.getDisplacementY());
-    SmartDashboard.putNumber("DZ", RobotContainer.drive.navx.getDisplacementZ());
-    SmartDashboard.putNumber("RX", RobotContainer.drive.navx.getRawGyroX());
-    SmartDashboard.putNumber("RY", RobotContainer.drive.navx.getRawGyroY());
-    SmartDashboard.putNumber("RZ", RobotContainer.drive.navx.getRawGyroZ());
+    // SmartDashboard.putNumber("DX", RobotContainer.drive.navx.getDisplacementX());
+    // SmartDashboard.putNumber("DY", RobotContainer.drive.navx.getDisplacementY());
+    // SmartDashboard.putNumber("DZ", RobotContainer.drive.navx.getDisplacementZ());
+    // SmartDashboard.putNumber("RX", RobotContainer.drive.navx.getRawGyroX());
+    // SmartDashboard.putNumber("RY", RobotContainer.drive.navx.getRawGyroY());
+    // SmartDashboard.putNumber("RZ", RobotContainer.drive.navx.getRawGyroZ());
+    
   }
 
   /**
@@ -89,6 +87,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     // RobotContainer.shooter.WriteToFile();
+    ledRunner.setAnimation(AnimationMode.DISABLED);
     
   }
 
@@ -119,8 +118,10 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     // RobotContainer.shooter.ReadFromFile();
    RobotContainer.indexer.indexerMotor.setSelectedSensorPosition(0);
+   RobotContainer.indexer.setSetpoint(0);
   //  m_robotContainer.arcadeDriveCommand.schedule(true);
    ledRunner.setAnimation(AnimationMode.FULL_RAINBOW);
+    RobotContainer.shooter.tiltEncoder.reset();
   }
 
   /**

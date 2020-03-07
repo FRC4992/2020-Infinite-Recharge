@@ -19,8 +19,11 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
+import frc.robot.LEDRunner.AnimationMode;
 import frc.robot.commands.ArcadeDrive;
 
 public class Drive extends PIDSubsystem {
@@ -33,12 +36,12 @@ public class Drive extends PIDSubsystem {
   public DoubleSolenoid shifter;
   public AHRS navx;
   CANEncoder leftEncoder, rightEncoder;
-  public PIDController autoDist = new PIDController(0.15, 0, 0);
-  public PIDController autoRotate = new PIDController(0.015, 0, 0);
+  public PIDController autoDist = new PIDController(0.1, 0, 0);
+  public PIDController autoRotate = new PIDController(0.01, 0, 0);
 
   public static enum SENSOR_TYPES {
     DISTANCE(0.000001, 0, 0, 1), ROTATION(0.001, 0, 0, 1), LIMELIGHT_DISTANCE(0.15, 0, 0, 0),
-    LIMELIGHT_ROTATION(0.015, 0, 0, 0), LIMELIGHT_BOTH(0, 0, 0, 0), POWERCELL(0.01, 0, 0, 2);
+    LIMELIGHT_ROTATION(0.0085, 0, 0, 0), LIMELIGHT_BOTH(0, 0, 0, 0), POWERCELL(0.007, 0, 0, 2),NONE(0,0,0,1);
 
     private double kP, kI, kD;
     private int pipelineIndex;
@@ -55,7 +58,7 @@ public class Drive extends PIDSubsystem {
 
   public Drive() {
     super(new PIDController(0, 0, 0));
-    setDefaultCommand(new ArcadeDrive());
+
     frontLeft = new CANSparkMax(Constants.TOP_LEFT_DRIVE, MotorType.kBrushless);
     frontRight = new CANSparkMax(Constants.TOP_RIGHT_DRIVE, MotorType.kBrushless);
     backLeft = new CANSparkMax(Constants.BOTTOM_LEFT_DRIVE, MotorType.kBrushless);
@@ -72,14 +75,23 @@ public class Drive extends PIDSubsystem {
     rightEncoder = frontRight.getEncoder();
     autoDist.setTolerance(0.2, 1);
     autoRotate.setTolerance(2, 2);
+
+    setFullSpeed(true);
   }
 
   @Override
   public void periodic() {
     super.periodic();
-    SmartDashboard.putNumber("Gyro", navx.getAngle());
-    SmartDashboard.putData("Drive", getController());
+    // SmartDashboard.putNumber("Gyro", navx.getAngle());
+    // SmartDashboard.putData("Drive", getController());
 
+  }
+
+  public void setFullSpeed(boolean full){
+    shifter.set(full?DoubleSolenoid.Value.kForward:DoubleSolenoid.Value.kReverse);
+  }
+  public boolean getFullSpeed(){
+    return shifter.get() == DoubleSolenoid.Value.kForward;
   }
 
   public void setCurrentSensor(SENSOR_TYPES currentSensor) {
@@ -108,58 +120,63 @@ public class Drive extends PIDSubsystem {
     drive.arcadeDrive(0, 0);
   }
 
-  public void setDriveSpeed(double xSpeed, double zRotation){
+  public void setDriveSpeed(double xSpeed, double zRotation) {
     drive.arcadeDrive(xSpeed, zRotation);
   }
 
-  
-
-  private int getLEDIndex(){
-    // double transformed = Constants.MIDDLE_LED_START+(limelightX()+26)/(2*26/(Constants.MIDDLE_LED_END-Constants.MIDDLE_LED_START));
-    // return Constants.LED_LENGTH-1-(int)MathUtil.clamp(transformed, Constants.MIDDLE_LED_START, Constants.MIDDLE_LED_END);
-    return 0;
-    //TODO: Fix this
+  private int getLEDIndex() {
+    double transformed = Constants.LED_MIDDLE_START
+        + (RobotContainer.limelightX() + 26) / (2 * 26 / (Constants.LED_MIDDLE_END - Constants.LED_MIDDLE_START));
+    return Constants.LED_LENGTH - 1
+        - (int) MathUtil.clamp(transformed, Constants.LED_MIDDLE_START, Constants.LED_MIDDLE_END);
+    // return 0;
+    // TODO: Fix this
   }
 
-  /*public void displayAlign(int r, int g, int b,AnimationMode searching){
-    if (!foundTarget()) {
+  public void displayAlign(int r, int g, int b, AnimationMode searching) {
+    if (!RobotContainer.foundTarget()) {
       Robot.ledRunner.setAnimation(searching);
     } else {
-      int middleLedIndex  = (Constants.MIDDLE_LED_END+Constants.MIDDLE_LED_START)/2;
+      int middleLedIndex = (Constants.LED_MIDDLE_END + Constants.LED_MIDDLE_START) / 2;
       Robot.ledRunner.setAnimation(AnimationMode.OFF);
       int ledIndex = getLEDIndex();
-      if(Math.abs(ledIndex-middleLedIndex)<2){
-        Robot.ledRunner.setAllRGB(r,g,b);
-      }else{
+      if (Math.abs(ledIndex - middleLedIndex) < 2) {
+        Robot.ledRunner.setAllRGB(r, g, b);
+      } else {
         Robot.ledRunner.clear();
-        Robot.ledRunner.buffer.setRGB(ledIndex, r,g,b);
-        if(ledIndex>middleLedIndex){
-          Robot.ledRunner.setRangeRGB(r, g, b, Constants.MIDDLE_LED_END, Constants.LED_LENGTH);
-        }else{
-          Robot.ledRunner.setRangeRGB(r, g, b, 0, Constants.MIDDLE_LED_START);
+        Robot.ledRunner.buffer.setRGB(ledIndex, r, g, b);
+        if (ledIndex > middleLedIndex) {
+          Robot.ledRunner.setRangeRGB(r, g, b, Constants.LED_MIDDLE_END, Constants.LED_LENGTH);
+        } else {
+          Robot.ledRunner.setRangeRGB(r, g, b, 0, Constants.LED_MIDDLE_START);
         }
       }
     }
-  }*/
-  //TODO: Fix this
-
+  }
+  // TODO: Fix this
 
   @Override
   public void useOutput(double output, double setpoint) {
     // Use the output here
-    //System.out.println("Setpoint: " + setpoint + ", current: " + getMeasurement() + ", output: " + output
-    // + ", at setpoint: " + getController().atSetpoint() + ", error: " + getController().getPositionError()
-      //  + ", setpoint: " + getController().getSetpoint() + ", enabled: " + isEnabled());
+    // System.out.println("Setpoint: " + setpoint + ", current: " + getMeasurement()
+    // + ", output: " + output
+    // + ", at setpoint: " + getController().atSetpoint() + ", error: " +
+    // getController().getPositionError()
+    // + ", setpoint: " + getController().getSetpoint() + ", enabled: " +
+    // isEnabled());
     switch (currentSensor) {
     case DISTANCE:
     case LIMELIGHT_DISTANCE:
       left.set(output);
       right.set(-output);
       break;
-    case ROTATION:
+
     case LIMELIGHT_ROTATION:
+      drive.feedWatchdog();
+    case ROTATION:
       left.set(output);
       right.set(output);
+
       break;
     case POWERCELL:
       if (RobotContainer.foundTarget()) {
@@ -175,8 +192,6 @@ public class Drive extends PIDSubsystem {
       break;
     }
   }
-
-
 
   @Override
   public double getMeasurement() {

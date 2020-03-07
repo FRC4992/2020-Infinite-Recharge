@@ -25,14 +25,20 @@ public class TempShoot extends CommandBase {
   public void initialize() {
     Indexer.ballCount = 0;
     RobotContainer.indexer.disable();
+    RobotContainer.shooter.enable();
+    RobotContainer.shooter.deltaControl.setSetpoint(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.shooter.leftShooter.set(-0.725);
-    RobotContainer.shooter.rightShooter.set(0.725);
-    RobotContainer.indexer.indexerMotor.set(-0.3);
+    RobotContainer.shooter.setSetpoint(RobotContainer.shooter.tempRPM);
+    if(RobotContainer.shooter.getController().atSetpoint() && RobotContainer.shooter.deltaControl.atSetpoint()){
+      RobotContainer.indexer.indexerMotor.set(-0.5);
+    }else{
+      RobotContainer.indexer.indexerMotor.set(0);
+    }
+    
   }
 
   // Called once the command ends or is interrupted.
@@ -43,6 +49,7 @@ public class TempShoot extends CommandBase {
     RobotContainer.indexer.indexerMotor.set(0);
     RobotContainer.indexer.setSetpoint(RobotContainer.indexer.indexerMotor.getSelectedSensorPosition());
     RobotContainer.indexer.enable();
+    RobotContainer.shooter.disable();
   }
 
   // Returns true when the command should end.

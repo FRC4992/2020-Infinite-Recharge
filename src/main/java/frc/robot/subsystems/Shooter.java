@@ -20,7 +20,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,30 +36,35 @@ public class Shooter extends PIDSubsystem {
   static BufferedWriter bw;
   static FileReader fr;
   static FileWriter fw;
-
+  public double tempRPM = 0;
   public CANSparkMax leftShooter, rightShooter;
   public WPI_TalonSRX tiltMotor = new WPI_TalonSRX(Constants.SHOOTER_TILT_MOTOR);
   double offsetX, offsetY;
 
-  Encoder tiltEncoder;
+  public Encoder tiltEncoder;
   public PIDController tiltController;
   CANEncoder leftShootEncoder, rightShootEncoder;
-  PIDController deltaControl;
+  public PIDController deltaControl;
   double deltaError;
 
   public Shooter() {
-    super(new PIDController(0, 0, 0));
+    super(new PIDController(0.0005, 0, 0.00001));
     initFile();
     ReadFromFile();
-    leftShooter = new CANSparkMax(Constants.LEFT_SHOOT_MOTOR,MotorType.kBrushless);
-    rightShooter = new CANSparkMax(Constants.RIGHT_SHOOT_MOTOR,MotorType.kBrushless);//right side is master
+    leftShooter = new CANSparkMax(Constants.LEFT_SHOOT_MOTOR, MotorType.kBrushless);
+    rightShooter = new CANSparkMax(Constants.RIGHT_SHOOT_MOTOR, MotorType.kBrushless);// right side is master
     leftShooter.setIdleMode(IdleMode.kCoast);
     rightShooter.setIdleMode(IdleMode.kCoast);
     leftShootEncoder = leftShooter.getEncoder();
     rightShootEncoder = rightShooter.getEncoder();
-    deltaControl = new PIDController(0, 0, 0);
+    deltaControl = new PIDController(0.00035, 0, 0);
+    deltaControl.setTolerance(20);
+
     tiltEncoder = new Encoder(8, 9);
-    tiltController = new PIDController(0.001, 0, 0);
+    tiltController = new PIDController(0.3, 0, 0);
+    tiltController.setTolerance(10);
+
+    getController().setTolerance(80);
   }
 
   public void setOffsets(double x, double y) {
@@ -114,26 +118,46 @@ public class Shooter extends PIDSubsystem {
   @Override
   public void useOutput(double output, double setpoint) {
     // Use the output here
-    leftShooter.set(output+deltaControl.calculate(deltaError));
-    rightShooter.set(-output);
+    double dout = deltaControl.calculate(deltaError);
+    SmartDashboard.putNumber("DELTA OUT", dout);
+    leftShooter.set(-((setpoint / 5500.0) + Math.max(output + dout, 0)));
+    rightShooter.set((setpoint / 5500.0) + Math.max(output, 0));
   }
 
   @Override
   public double getMeasurement() {
     // Return the process variable measurement here
-    return -rightShootEncoder.getVelocity();
+    return rightShootEncoder.getVelocity();
   }
 
   @Override
   public void periodic() {
     // TODO Auto-generated method stub
     super.periodic();
-    tiltMotor.set(tiltController.calculate(RobotContainer.limelightY()));
+    // tiltMotor.set(tiltController.calculate(RobotContainer.limelightY()));
     SmartDashboard.putNumber("Tilt Encoder", tiltEncoder.get());
-    deltaError = rightShootEncoder.getVelocity()-leftShootEncoder.getVelocity();
-    SmartDashboard.putNumber("Left Speed", leftShootEncoder.getVelocity());
-    SmartDashboard.putNumber("Right Speed", -rightShootEncoder.getVelocity());
-    SmartDashboard.putData("Master Controller",getController());
-    SmartDashboard.putData("Delta Controller",deltaControl);
+    // SmartDashboard.putNumber("LimelightY",RobotContainer.limelightY());
+    deltaError = -leftShootEncoder.getVelocity() - rightShootEncoder.getVelocity();
+    SmartDashboard.putNumber("Delta Error", deltaError);
+    // SmartDashboard.putNumber("Left Speed", -leftShootEncoder.getVelocity());
+    SmartDashboard.putNumber("Right Speed", rightShootEncoder.getVelocity());
+    // SmartDashboard.putData("T");
+    // SmartDashboard.putData("TilT Controller",tiltController);
+    SmartDashboard.putData("Master Controller", getController());
+    SmartDashboard.putData("Delta Controller", deltaControl);
+    SmartDashboard.putBoolean("Speed Setpoint", getController().atSetpoint());
+    SmartDashboard.putBoolean("Delta Setpoint", deltaControl.atSetpoint());
+  }
+
+  public void updateTilter() {
+    if (RobotContainer.foundTarget()) {
+      tiltMotor.set(tiltController.calculate(RobotContainer.limelightY()));
+    } else {
+      tiltMotor.set(0);
+    }
+  }
+
+  public void updateTilterTicks() {
+    tiltMotor.set(tiltController.calculate(tiltEncoder.get()));
   }
 }

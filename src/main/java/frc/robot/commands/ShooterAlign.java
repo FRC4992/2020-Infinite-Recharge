@@ -32,6 +32,8 @@ public class ShooterAlign extends CommandBase {
   @Override
   public void execute() {
     RobotContainer.shooter.tiltController.setSetpoint(0);
+    RobotContainer.shooter.updateTilter();
+    
   }
 
   // Called once the command ends or is interrupted.

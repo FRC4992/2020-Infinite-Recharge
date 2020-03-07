@@ -17,7 +17,7 @@ public class LEDRunner implements Runnable {
     public void run() {
         while (true) {
             try {
-                SmartDashboard.putNumber("Animation Time", time);
+                // SmartDashboard.putNumber("Animation Time", time);
                 switch (currentAnimation) {
                 case DISABLED:
                     breathe(0, 0, 255, true);
@@ -38,7 +38,7 @@ public class LEDRunner implements Runnable {
                     bounce(255, 0, 0, true, 10);
                     break;
                 case OFF:
-                    // clear();
+                    clear();
                     break;
                 case FULL_RAINBOW:
                     fullRainbow();

@@ -54,6 +54,7 @@ public class AutoDistAndCenter extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.drive.autoRotate.atSetpoint() && RobotContainer.drive.autoDist.atSetpoint();
+    // return RobotContainer.drive.autoRotate.atSetpoint() && RobotContainer.drive.autoDist.atSetpoint();
+    return false;
   }
 }

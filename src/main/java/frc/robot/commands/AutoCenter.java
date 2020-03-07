@@ -48,6 +48,7 @@ public class AutoCenter extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.drive.getController().atSetpoint();
+    // return RobotContainer.drive.getController().atSetpoint();
+    return false;
   }
 }

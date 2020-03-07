@@ -19,7 +19,7 @@ public final class Constants {
     // Pneumatics
     public static final int
     SHIFTER_FORWARD = 0,
-    SHIFTER_REVERSE = 1;
+    SHIFTER_REVERSE = 2;
 
     // Motors
     public static final int
@@ -31,9 +31,9 @@ public final class Constants {
     INDEX_MOTOR = 7,
     LEFT_SHOOT_MOTOR = 9,
     RIGHT_SHOOT_MOTOR = 10,
-    TELESCOPE_MOTOR = 7,
-    LEFT_WINCH = 8,
-    RIGHT_WINCH = 11,
+    TELESCOPE_MOTOR = 15,
+    LEFT_WINCH = 5,
+    RIGHT_WINCH = 6,
     PANEL_MOTOR = 12,
     SHOOTER_TILT_MOTOR = 8;
 
@@ -50,15 +50,23 @@ public final class Constants {
 
     // Sensors
     public static final int
-    LEFT_SHOOTER_PROXY = 7,
-    RIGHT_SHOOTER_PROXY = 6,
     TOF = 15;
-
-    public static final long NANO_TIME_SCALE = 1*(int)(Math.pow(10, 9));
-
 	public static final double DRIVE_TICKS_PER_METER = 15;
     public static final double INTAKE_SENSOR_RANGE_MM = 60;
     public static final int INDEXER_TICKS_PER_SEGMENT = 2240;
     public static final int BALL_RANGE = 80;
     public static final int MAX_VELOCITY_ERROR = 20;
+
+    public static final int
+    TELESCOPE_ENCODER_A = 1,
+    TELESCOPE_ENCODER_B = 2
+    ;
+    public static final double 
+    TELESCOPE_MAX = 500,
+    TELESCOPE_MIN = 0;
+
+    public static final double
+    TILTER_MIN = 0,
+    // TILTER_MAX = -868;
+    TILTER_MAX = -200;
 }

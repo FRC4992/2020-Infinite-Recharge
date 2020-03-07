@@ -29,7 +29,7 @@ public class Indexer extends PIDSubsystem {
     tof = new TimeOfFlight(Constants.TOF);
     getController().setTolerance(50,10);
     indexerMotor.setNeutralMode(NeutralMode.Brake);
-    enable();
+    // enable();
     indexerMotor.setSelectedSensorPosition(0);
   }
 
@@ -37,13 +37,13 @@ public class Indexer extends PIDSubsystem {
   public void periodic() {
     super.periodic();
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Indexer Ticks", this.getMeasurement());
+    // SmartDashboard.putNumber("Indexer Ticks", this.getMeasurement());
     SmartDashboard.putData(getController());
-    SmartDashboard.putNumber("Ball Count", ballCount);
-    SmartDashboard.putBoolean("Indexer Done", getController().atSetpoint());
-    SmartDashboard.putBoolean("TOF",seeBall());
+    // SmartDashboard.putNumber("Ball Count", ballCount);
+    // SmartDashboard.putBoolean("Indexer Done", getController().atSetpoint());
+    // SmartDashboard.putBoolean("TOF",seeBall());
     SmartDashboard.putNumber("TOF Range", tof.getRange());
-    SmartDashboard.putNumber("Vel error", getController().getVelocityError());
+    // SmartDashboard.putNumber("Vel error", getController().getVelocityError());
   }
 
   @Override

@@ -8,7 +8,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
+import frc.robot.LEDRunner.AnimationMode;
 import frc.robot.subsystems.Drive.SENSOR_TYPES;
 
 public class PowercellAlign extends CommandBase {
@@ -26,6 +28,7 @@ public class PowercellAlign extends CommandBase {
     RobotContainer.drive.enable();
     RobotContainer.drive.setCurrentSensor(SENSOR_TYPES.POWERCELL);
     RobotContainer.drive.setSetpoint(0);
+    Robot.ledRunner.setAnimation(AnimationMode.OFF);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,11 +43,12 @@ public class PowercellAlign extends CommandBase {
   public void end(boolean interrupted) {
     // System.out.println("AutoCenter ended");
     RobotContainer.drive.stop();
+    Robot.ledRunner.setAnimation(AnimationMode.FULL_RAINBOW);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.drive.getController().atSetpoint();
+    return false;
   }
 }

@@ -7,42 +7,37 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Drive.SENSOR_TYPES;
 
-public class ArcadeDrive extends CommandBase {
+public class ToggleShift extends CommandBase {
   /**
-   * Creates a new ArcadeDrive.
+   * Creates a new ToggleShify.
    */
-  public ArcadeDrive() {
+  public ToggleShift() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.drive);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.drive.disable();
-    RobotContainer.drive.setCurrentSensor(SENSOR_TYPES.NONE);
-    new SetTilterTicks(0).schedule();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.drive.setDriveSpeed(-RobotContainer.driveStick.getRawAxis(1), RobotContainer.driveStick.getRawAxis(0));
+    RobotContainer.drive.setFullSpeed(!RobotContainer.drive.getFullSpeed());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.drive.enable();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }
