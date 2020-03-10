@@ -43,8 +43,8 @@ public class Drive extends PIDSubsystem {
   DifferentialDriveOdometry positionTracker;
 
   public static enum SENSOR_TYPES {
-    DISTANCE(0.01, 0, 0, 1), ROTATION(0.001, 0, 0, 1), LIMELIGHT_DISTANCE(0.15, 0, 0, 0),
-    LIMELIGHT_ROTATION(0.009, 0, 0, 0), LIMELIGHT_BOTH(0, 0, 0, 0), POWERCELL(0.007, 0, 0, 2),NONE(0,0,0,1);
+    DISTANCE(0.01, 0, 0, 0), ROTATION(0.001, 0, 0, 1), LIMELIGHT_DISTANCE(0.15, 0, 0, 0),
+    LIMELIGHT_ROTATION(0.009, 0, 0, 0),SHOOTER_TILT(0,0,0,0), LIMELIGHT_BOTH(0, 0, 0, 0), POWERCELL(0.007, 0, 0, 2),NONE(0,0,0,1);
 
     private double kP, kI, kD;
     private int pipelineIndex;

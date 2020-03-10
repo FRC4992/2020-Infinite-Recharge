@@ -23,6 +23,7 @@ import frc.robot.commands.ShooterTiltAlign;
 import frc.robot.commands.TempShoot;
 import frc.robot.commands.ToggleShift;
 import frc.robot.commands.TurnToAngle;
+import frc.robot.commands.UnIntake;
 import frc.robot.commands.WinchDown;
 import frc.robot.commands.TurnToAngle.TURN_TYPE;
 import frc.robot.subsystems.Indexer;
@@ -98,10 +99,11 @@ public class RobotContainer {
   }
 
   public void autoLineShoot(){
-    new DriveDist(-1)
+    new DriveDist(-2)
     .alongWith(new ShooterTiltAlign().withInterrupt(shooter.tiltController::atSetpoint).withTimeout(2))
     .andThen(new ShooterAlign().withInterrupt(this::shooterAligned))
     .andThen(new Shoot().withTimeout(3))
+    .andThen(new SetTilterTicks(0).withTimeout(2))
     .schedule(true);
   }
   public void multiBallShoot(){
@@ -110,6 +112,7 @@ public class RobotContainer {
     .andThen(new TurnToAngle(TURN_TYPE.ABSOLUTE,180))
     .andThen(new DriveDist(4)).alongWith(new IntakeSequence())
     .andThen(new TurnToAngle(TURN_TYPE.ABSOLUTE,0))
+    .andThen(new DriveDist(2))
     .andThen(new ShooterAlign().withInterrupt(this::shooterAligned)
     .andThen(new Shoot().withTimeout(2)));
   }
@@ -165,5 +168,7 @@ public class RobotContainer {
 
     JoystickButton extendTelescope = new JoystickButton(secondStick, 6);
     extendTelescope.whenHeld(new TelescopeUp());
+    JoystickButton unIntake = new JoystickButton(secondStick,2);
+    unIntake.whenHeld(new UnIntake());
   }
 }
