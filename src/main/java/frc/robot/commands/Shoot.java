@@ -11,11 +11,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Indexer;
 
-public class TempShoot extends CommandBase {
+public class Shoot extends CommandBase {
   /**
-   * Creates a new TempShoot.
+   * Creates a new Shoot.
    */
-  public TempShoot() {
+  public Shoot() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.shooter);
   }
@@ -32,7 +32,8 @@ public class TempShoot extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.shooter.setSetpoint(RobotContainer.shooter.tempRPM);
+    // RobotContainer.shooter.setSetpoint(RobotContainer.shooter.getShooterSpeed());
+    RobotContainer.shooter.setSetpoint(4200);
     if(RobotContainer.shooter.getController().atSetpoint() && RobotContainer.shooter.deltaControl.atSetpoint()){
       RobotContainer.indexer.indexerMotor.set(-0.25);
     }

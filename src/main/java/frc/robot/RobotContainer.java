@@ -17,10 +17,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.IntakeSequence;
 import frc.robot.commands.PowercellAlign;
 import frc.robot.commands.SetTilterTicks;
+import frc.robot.commands.Shoot;
 import frc.robot.commands.ShooterAlign;
+import frc.robot.commands.ShooterTiltAlign;
 import frc.robot.commands.TempShoot;
 import frc.robot.commands.ToggleShift;
 import frc.robot.commands.TurnToAngle;
+import frc.robot.commands.WinchDown;
 import frc.robot.commands.TurnToAngle.TURN_TYPE;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
@@ -31,6 +34,12 @@ import frc.robot.subsystems.Drive;
 import frc.robot.commands.WinchUp;
 import frc.robot.subsystems.Winch;
 import frc.robot.subsystems.Telescope;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.ControlWheelColor;
+import frc.robot.commands.SpinControlWheel;
+import frc.robot.commands.TelescopeDown;
+import frc.robot.commands.TelescopeUp;
+import frc.robot.subsystems.ControlWheelSpinner;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -53,6 +62,7 @@ public class RobotContainer {
   private static NetworkTable limelight;
   public static Winch winch = new Winch();
   public static Telescope telescope = new Telescope();
+  public static ControlWheelSpinner wheelSpinner = new ControlWheelSpinner();
 
 
   /**
@@ -87,6 +97,27 @@ public class RobotContainer {
     limelight.getEntry("pipeline").setDouble(index);
   }
 
+  public void autoLineShoot(){
+    new DriveDist(-1)
+    .alongWith(new ShooterTiltAlign().withInterrupt(shooter.tiltController::atSetpoint).withTimeout(2))
+    .andThen(new ShooterAlign().withInterrupt(this::shooterAligned))
+    .andThen(new Shoot().withTimeout(3))
+    .schedule(true);
+  }
+  public void multiBallShoot(){
+    new ShooterAlign().withInterrupt(this::shooterAligned)
+    .andThen(new Shoot().withTimeout(2))
+    .andThen(new TurnToAngle(TURN_TYPE.ABSOLUTE,180))
+    .andThen(new DriveDist(4)).alongWith(new IntakeSequence())
+    .andThen(new TurnToAngle(TURN_TYPE.ABSOLUTE,0))
+    .andThen(new ShooterAlign().withInterrupt(this::shooterAligned)
+    .andThen(new Shoot().withTimeout(2)));
+  }
+
+  private boolean shooterAligned(){
+    return drive.getController().atSetpoint() && shooter.tiltController.atSetpoint();
+  }
+
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by instantiating a {@link GenericHID} or one of its subclasses
@@ -97,10 +128,13 @@ public class RobotContainer {
     JoystickButton full = new JoystickButton(stick,3);
     full.whenHeld(new IntakeSequence());
     JoystickButton shoot = new JoystickButton(stick,2);
-    shoot.whenHeld(new TempShoot());
+    shoot.whenHeld(new Shoot());
 
-    JoystickButton toggleShift = new JoystickButton(stick,7);
+    JoystickButton toggleShift = new JoystickButton(stick,8);
     toggleShift.whenPressed(new ToggleShift());
+
+    JoystickButton winchDown = new JoystickButton(stick, 1);
+    winchDown.whenHeld(new WinchDown());
     
 
     // JoystickButton shiftUp = new JoystickButton(stick, 11);
@@ -118,25 +152,18 @@ public class RobotContainer {
 
     Joystick secondStick = new Joystick(1);
     
-    JoystickButton shootSpeedUp = new JoystickButton(secondStick, 8);
-    JoystickButton shootSpeedDown = new JoystickButton(secondStick, 7);
-    shootSpeedUp.whenPressed(()->{shooter.tempRPM+=100;System.out.println(shooter.tempRPM);});
-    shootSpeedDown.whenPressed(()->{shooter.tempRPM-=100;System.out.println(shooter.tempRPM);});
+    // JoystickButton shootSpeedUp = new JoystickButton(secondStick, 8);
+    // JoystickButton shootSpeedDown = new JoystickButton(secondStick, 7);
+    // shootSpeedUp.whenPressed(()->{shooter.tempRPM+=100;System.out.println(shooter.tempRPM);});
+    // shootSpeedDown.whenPressed(()->{shooter.tempRPM-=100;System.out.println(shooter.tempRPM);});
 
-    JoystickButton autoDistAndCenter = new JoystickButton(secondStick, 1);
-    autoDistAndCenter.whenHeld(new AutoDistAndCenter());
-
-    JoystickButton driveOneMeter = new JoystickButton(secondStick,2);
-    driveOneMeter.whenHeld(new DriveDist(1));
-
-    JoystickButton rotate90 = new JoystickButton(secondStick,3);
-    rotate90.whenHeld(new TurnToAngle(TURN_TYPE.RELATIVE, 90));
-
-    JoystickButton winch = new JoystickButton(secondStick, 5);
+    JoystickButton winch = new JoystickButton(secondStick, 1);
     winch.whenHeld(new WinchUp());
-    // winch.whenPressed(new TelescopeDown());
+    // // winch.whenPressed(new TelescopeDown());
+    JoystickButton telescopeDown = new JoystickButton(secondStick,5);
+    telescopeDown.whenHeld(new TelescopeDown());
 
     JoystickButton extendTelescope = new JoystickButton(secondStick, 6);
-    // extendTelescope.whenHeld(new TelescopeUp());
+    extendTelescope.whenHeld(new TelescopeUp());
   }
 }

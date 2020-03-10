@@ -8,10 +8,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Indexer;
 import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.LEDRunner.AnimationMode;
 import frc.robot.commands.SetTilterTicks;
 
@@ -34,6 +36,7 @@ public class Robot extends TimedRobot {
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
    */
+  SendableChooser<Double> startAngle = new SendableChooser<Double>();
   @Override
   public void robotInit() {
     // Instantiate our RobotContainer. This will perform all our button bindings,
@@ -44,12 +47,16 @@ public class Robot extends TimedRobot {
     ledRunner = new LEDRunner();
     ledThread = new Thread(ledRunner);
     ledThread.start();
-    
+
     led.setLength(ledRunner.buffer.getLength());
     led.setData(ledRunner.buffer);
     led.start();
-  
+
     ledRunner.setAnimation(AnimationMode.INIT);
+    
+    startAngle.setDefaultOption("0 Degrees", 0.0);
+    startAngle.addOption("180 Degrees", 180.0);
+    SmartDashboard.putData("Starting Angle",startAngle);
   }
 
   /**
@@ -75,10 +82,8 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putNumber("DX", RobotContainer.drive.navx.getDisplacementX());
     // SmartDashboard.putNumber("DY", RobotContainer.drive.navx.getDisplacementY());
     // SmartDashboard.putNumber("DZ", RobotContainer.drive.navx.getDisplacementZ());
-    // SmartDashboard.putNumber("RX", RobotContainer.drive.navx.getRawGyroX());
-    // SmartDashboard.putNumber("RY", RobotContainer.drive.navx.getRawGyroY());
-    // SmartDashboard.putNumber("RZ", RobotContainer.drive.navx.getRawGyroZ());
-    
+    SmartDashboard.putNumber("Angle", RobotContainer.drive.navx.getAngle());
+
   }
 
   /**
@@ -87,13 +92,15 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     // RobotContainer.shooter.WriteToFile();
-    ledRunner.setAnimation(AnimationMode.DISABLED);
-    
+    if(ledRunner.currentAnimation!=AnimationMode.INIT){
+      ledRunner.setAnimation(AnimationMode.DISABLED);
+    }
+
   }
 
   @Override
   public void disabledPeriodic() {
-    if(ledRunner.currentAnimation == AnimationMode.OFF){
+    if (ledRunner.currentAnimation == AnimationMode.OFF) {
       ledRunner.setAnimation(AnimationMode.DISABLED);
     }
   }
@@ -104,7 +111,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-
+    ledRunner.setAnimation(AnimationMode.FULL_RAINBOW);
+    m_robotContainer.autoLineShoot();
+    RobotContainer.drive.startAngle = startAngle.getSelected();
   }
 
   /**
@@ -117,11 +126,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     // RobotContainer.shooter.ReadFromFile();
-   RobotContainer.indexer.indexerMotor.setSelectedSensorPosition(0);
-   RobotContainer.indexer.setSetpoint(0);
-  //  m_robotContainer.arcadeDriveCommand.schedule(true);
-   ledRunner.setAnimation(AnimationMode.FULL_RAINBOW);
-    RobotContainer.shooter.tiltEncoder.reset();
+    RobotContainer.indexer.indexerMotor.setSelectedSensorPosition(0);
+    RobotContainer.indexer.setSetpoint(0);
+    // m_robotContainer.arcadeDriveCommand.schedule(true);
+    ledRunner.setAnimation(AnimationMode.FULL_RAINBOW);
+    // RobotContainer.shooter.tiltEncoder.reset();
   }
 
   /**
@@ -130,7 +139,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     double rStick = RobotContainer.stick.getRawAxis(5);
-    RobotContainer.shooter.tiltMotor.set(-Math.signum(rStick)*Math.pow(rStick,2));//TODO remove this
+    // RobotContainer.shooter.setTilterSpeed(-Math.signum(rStick) * Math.pow(rStick, 2));// TODO remove this
     CommandScheduler.getInstance().run();
   }
 
@@ -139,6 +148,7 @@ public class Robot extends TimedRobot {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
     Indexer.ballCount = 0;
+    ledRunner.setAnimation(AnimationMode.FULL_RAINBOW);
   }
 
   /**
@@ -146,5 +156,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    if (RobotController.getUserButton()) {
+      RobotContainer.winch.setSpeed(-1.0);
+    } else {
+      RobotContainer.winch.setSpeed(0);
+    }
+    // SmartDashboard.putBoolean("User", RobotController.getUserButton());
   }
 }

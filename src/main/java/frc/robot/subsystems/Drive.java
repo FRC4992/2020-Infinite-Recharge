@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpiutil.math.MathUtil;
@@ -38,10 +40,11 @@ public class Drive extends PIDSubsystem {
   CANEncoder leftEncoder, rightEncoder;
   public PIDController autoDist = new PIDController(0.1, 0, 0);
   public PIDController autoRotate = new PIDController(0.01, 0, 0);
+  DifferentialDriveOdometry positionTracker;
 
   public static enum SENSOR_TYPES {
-    DISTANCE(0.000001, 0, 0, 1), ROTATION(0.001, 0, 0, 1), LIMELIGHT_DISTANCE(0.15, 0, 0, 0),
-    LIMELIGHT_ROTATION(0.0085, 0, 0, 0), LIMELIGHT_BOTH(0, 0, 0, 0), POWERCELL(0.007, 0, 0, 2),NONE(0,0,0,1);
+    DISTANCE(0.01, 0, 0, 1), ROTATION(0.001, 0, 0, 1), LIMELIGHT_DISTANCE(0.15, 0, 0, 0),
+    LIMELIGHT_ROTATION(0.009, 0, 0, 0), LIMELIGHT_BOTH(0, 0, 0, 0), POWERCELL(0.007, 0, 0, 2),NONE(0,0,0,1);
 
     private double kP, kI, kD;
     private int pipelineIndex;
@@ -55,6 +58,7 @@ public class Drive extends PIDSubsystem {
   }
 
   SENSOR_TYPES currentSensor = SENSOR_TYPES.ROTATION;
+  public double startAngle = 0;
 
   public Drive() {
     super(new PIDController(0, 0, 0));
@@ -77,14 +81,22 @@ public class Drive extends PIDSubsystem {
     autoRotate.setTolerance(2, 2);
 
     setFullSpeed(true);
+    navx.zeroYaw();
+    leftEncoder.setPosition(0);
+    rightEncoder.setPosition(0);
+
+    positionTracker = new DifferentialDriveOdometry(Rotation2d.fromDegrees(navx.getAngle()));
   }
 
   @Override
   public void periodic() {
     super.periodic();
+    positionTracker.update(Rotation2d.fromDegrees(-navx.getAngle()), leftEncoder.getPosition()/Constants.DRIVE_TICKS_PER_METER, -rightEncoder.getPosition()/Constants.DRIVE_TICKS_PER_METER);
     // SmartDashboard.putNumber("Gyro", navx.getAngle());
     // SmartDashboard.putData("Drive", getController());
-
+    SmartDashboard.putNumber("Drive Ticks", (leftEncoder.getPosition() - rightEncoder.getPosition()) / 2);
+    SmartDashboard.putNumber("Dx",positionTracker.getPoseMeters().getTranslation().getX());
+    SmartDashboard.putNumber("Dy",positionTracker.getPoseMeters().getTranslation().getY());
   }
 
   public void setFullSpeed(boolean full){
@@ -100,7 +112,7 @@ public class Drive extends PIDSubsystem {
     RobotContainer.setPipleline(currentSensor.pipelineIndex);
     switch (currentSensor) {
     case DISTANCE:
-      getController().setTolerance(100, 10);
+      getController().setTolerance(1, 1);
       break;
     case LIMELIGHT_DISTANCE:
       getController().setTolerance(0.2, 1);
@@ -209,5 +221,9 @@ public class Drive extends PIDSubsystem {
     default:
       return -1;
     }
+  }
+  public void resetDistance(){
+    leftEncoder.setPosition(0);
+    rightEncoder.setPosition(0);
   }
 }

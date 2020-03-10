@@ -31,6 +31,7 @@ public class ShooterAlign extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // RobotContainer.shooter.tiltController.setSetpoint(RobotContainer.shooter.getShooterOffset());
     RobotContainer.shooter.tiltController.setSetpoint(0);
     RobotContainer.shooter.updateTilter();
     

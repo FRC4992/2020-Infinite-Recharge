@@ -28,17 +28,19 @@ public class TelescopeDown extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.telescope.setSpeed(-0.6);
+    RobotContainer.telescope.setSpeed(-0.5);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    RobotContainer.telescope.setSpeed(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.telescope.encoder.get()<=Constants.TELESCOPE_MIN;
+    // return RobotContainer.telescope.encoder.get()<=Constants.TELESCOPE_MIN;
+    return false;
   }
 }

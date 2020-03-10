@@ -38,7 +38,7 @@ public class Indexer extends PIDSubsystem {
     super.periodic();
     // This method will be called once per scheduler run
     // SmartDashboard.putNumber("Indexer Ticks", this.getMeasurement());
-    SmartDashboard.putData(getController());
+    // SmartDashboard.putData(getController());
     // SmartDashboard.putNumber("Ball Count", ballCount);
     // SmartDashboard.putBoolean("Indexer Done", getController().atSetpoint());
     // SmartDashboard.putBoolean("TOF",seeBall());

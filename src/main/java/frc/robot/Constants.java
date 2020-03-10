@@ -18,8 +18,11 @@ package frc.robot;
 public final class Constants {
     // Pneumatics
     public static final int
-    SHIFTER_FORWARD = 0,
-    SHIFTER_REVERSE = 2;
+    SHIFTER_FORWARD = 2,
+    SHIFTER_REVERSE = 0,
+
+    SPINNER_FORWARD = 1,
+    SPINNER_REVERSE = 3;
 
     // Motors
     public static final int
@@ -46,12 +49,13 @@ public final class Constants {
 
     // Joystick
     public static final int
-    STICK = 0;
+    STICK = 0,
+    PANEL = 1;
 
     // Sensors
     public static final int
     TOF = 15;
-	public static final double DRIVE_TICKS_PER_METER = 15;
+	public static final double DRIVE_TICKS_PER_METER = 15.57;
     public static final double INTAKE_SENSOR_RANGE_MM = 60;
     public static final int INDEXER_TICKS_PER_SEGMENT = 2240;
     public static final int BALL_RANGE = 80;
@@ -67,6 +71,8 @@ public final class Constants {
 
     public static final double
     TILTER_MIN = 0,
-    // TILTER_MAX = -868;
-    TILTER_MAX = -200;
+    TILTER_MAX = 868;
+    // TILTER_MAX = 200;
+
+    
 }

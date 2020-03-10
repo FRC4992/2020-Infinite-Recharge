@@ -28,12 +28,14 @@ public class DriveDist extends CommandBase {
   public void initialize() {
     RobotContainer.drive.enable();
     RobotContainer.drive.setCurrentSensor(SENSOR_TYPES.DISTANCE);
+    RobotContainer.drive.resetDistance();
     RobotContainer.drive.setSetpoint(dist*Constants.DRIVE_TICKS_PER_METER);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    RobotContainer.drive.drive.feedWatchdog();
   }
 
   // Called once the command ends or is interrupted.

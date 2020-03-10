@@ -36,7 +36,7 @@ public class Shooter extends PIDSubsystem {
   static BufferedWriter bw;
   static FileReader fr;
   static FileWriter fw;
-  public double tempRPM = 0;
+  public double tempRPM = 4000;
   public CANSparkMax leftShooter, rightShooter;
   public WPI_TalonSRX tiltMotor = new WPI_TalonSRX(Constants.SHOOTER_TILT_MOTOR);
   double offsetX, offsetY;
@@ -60,8 +60,8 @@ public class Shooter extends PIDSubsystem {
     deltaControl = new PIDController(0.00035, 0, 0);
     deltaControl.setTolerance(20);
 
-    tiltEncoder = new Encoder(8, 9);
-    tiltController = new PIDController(0.3, 0, 0);
+    tiltEncoder = new Encoder(9, 8);
+    tiltController = new PIDController(0.25, 0, 0);
     tiltController.setTolerance(10);
 
     getController().setTolerance(80);
@@ -137,27 +137,49 @@ public class Shooter extends PIDSubsystem {
     // tiltMotor.set(tiltController.calculate(RobotContainer.limelightY()));
     SmartDashboard.putNumber("Tilt Encoder", tiltEncoder.get());
     // SmartDashboard.putNumber("LimelightY",RobotContainer.limelightY());
-    deltaError = -leftShootEncoder.getVelocity() - rightShootEncoder.getVelocity();
+    // deltaError = -leftShootEncoder.getVelocity() - rightShootEncoder.getVelocity();
     SmartDashboard.putNumber("Delta Error", deltaError);
     // SmartDashboard.putNumber("Left Speed", -leftShootEncoder.getVelocity());
     SmartDashboard.putNumber("Right Speed", rightShootEncoder.getVelocity());
     // SmartDashboard.putData("T");
     // SmartDashboard.putData("TilT Controller",tiltController);
-    SmartDashboard.putData("Master Controller", getController());
-    SmartDashboard.putData("Delta Controller", deltaControl);
-    SmartDashboard.putBoolean("Speed Setpoint", getController().atSetpoint());
-    SmartDashboard.putBoolean("Delta Setpoint", deltaControl.atSetpoint());
+    // SmartDashboard.putData("Master Controller", getController());
+    // SmartDashboard.putData("Delta Controller", deltaControl);
+    // SmartDashboard.putBoolean("Speed Setpoint", getController().atSetpoint());
+    // SmartDashboard.putBoolean("Delta Setpoint", deltaControl.atSetpoint());
   }
 
   public void updateTilter() {
     if (RobotContainer.foundTarget()) {
-      tiltMotor.set(tiltController.calculate(RobotContainer.limelightY()));
+      double output = tiltController.calculate(RobotContainer.limelightY());
+      setTilterSpeed(output); 
     } else {
       tiltMotor.set(0);
     }
   }
 
+  public void setTilterSpeed(double speed){
+    if((speed<0 && tiltEncoder.get()<Constants.TILTER_MAX) || (speed>0 && tiltEncoder.get()>0)){
+      tiltMotor.set(speed);
+    }else{
+      tiltMotor.set(0);
+    }
+  }
+
   public void updateTilterTicks() {
-    tiltMotor.set(tiltController.calculate(tiltEncoder.get()));
+    double output = -tiltController.calculate(tiltEncoder.get());
+    setTilterSpeed(output*0.05);
+  }
+  public double getShooterOffset(){
+    double x = RobotContainer.drive.positionTracker.getPoseMeters().getTranslation().getX();
+    double y = RobotContainer.drive.positionTracker.getPoseMeters().getTranslation().getY();
+    double distance = Math.sqrt((x*x)+(y*y));
+    return .0042-(0.103*distance)-(0.167*distance*distance);
+  }
+  public double getShooterSpeed(){
+    double x = RobotContainer.drive.positionTracker.getPoseMeters().getTranslation().getX();
+    double y = RobotContainer.drive.positionTracker.getPoseMeters().getTranslation().getY();
+    double distance = Math.sqrt((x*x)+(y*y));
+    return (290*distance) + 4090;
   }
 }
